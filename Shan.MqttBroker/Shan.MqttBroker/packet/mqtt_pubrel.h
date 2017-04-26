@@ -18,6 +18,8 @@ public:
 
 	virtual void serialize(shan::util::streambuf_ptr sb_ptr) override;
 
+	uint16_t packet_id() const { return _packet_id; }
+
 private:
 	uint16_t _packet_id;
 };

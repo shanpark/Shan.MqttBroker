@@ -46,7 +46,7 @@ mqtt_publish::mqtt_publish(const fixed_header& fh, shan::util::streambuf_ptr sb_
 	sb_ptr->read(&_payload[0], payload_len);
 }
 
-mqtt_publish::mqtt_publish(bool dup, uint8_t qos, bool retain, std::string topic_name, uint16_t packet_id, std::vector<uint8_t>&& payload)
+mqtt_publish::mqtt_publish(bool dup, uint8_t qos, bool retain, std::string topic_name, uint16_t packet_id, const std::vector<uint8_t>& payload)
 : fixed_header(PUBLISH, 0, 0) {
 	// flags
 	uint8_t flags = 0;
@@ -75,7 +75,7 @@ mqtt_publish::mqtt_publish(bool dup, uint8_t qos, bool retain, std::string topic
 
 	if (payload.size() + _remaining_length > 0x0fffffff)
 		throw mqtt_error("try to cretae malformed packet. (PUBLISH payload is too long)");
-	_payload = std::move(payload);
+	_payload = payload; // copy assignment.
 	_remaining_length += _payload.size();
 }
 

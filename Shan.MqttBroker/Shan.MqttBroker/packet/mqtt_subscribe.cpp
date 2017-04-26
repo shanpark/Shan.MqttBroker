@@ -26,6 +26,10 @@ mqtt_subscribe::mqtt_subscribe(const fixed_header& fh, shan::util::streambuf_ptr
 		std::string topic = decode_string(sb_ptr);
 		remain -= (topic.length() + 2);
 
+		bool is_wild_topic = false;
+		if (!is_topic_filter_valid(topic, is_wild_topic))
+			throw mqtt_error("A SUBSCRIBE with invalid topic filter.");
+
 		uint8_t max_qos = sb_ptr->read_uint8();
 		if (max_qos >= 3)
 			throw mqtt_error("malformed packet. (SUBSCRIBE topic filter QoS)");
@@ -33,6 +37,7 @@ mqtt_subscribe::mqtt_subscribe(const fixed_header& fh, shan::util::streambuf_ptr
 
 		_topic_filters.emplace_back(topic);
 		_max_qoses.push_back(max_qos);
+		_is_wild.push_back(is_wild_topic);
 	}
 
 	if (_topic_filters.empty())
@@ -66,4 +71,27 @@ void mqtt_subscribe::add_topic_filter(std::string topic_filter, uint8_t max_qos)
 
 	_remaining_length ++;
 	_max_qoses.push_back(max_qos);
+}
+
+bool mqtt_subscribe::is_topic_filter_valid(std::string topic_filter, bool& is_wild) {
+	is_wild = false;
+
+	char ch, prev_ch = '\0';
+	auto len = topic_filter.length();
+	for (int inx = 0 ; inx < len ; inx++) {
+		ch = topic_filter[inx];
+		if (ch == '#') {
+			is_wild = true;
+			if (((inx != 0) && (prev_ch != '/')) || (inx + 1 != len))
+				return false;
+		}
+		else if (ch == '+') {
+			is_wild = true;
+			if (((inx != 0) && (prev_ch != '/')) || ((inx + 1 != len) && (topic_filter[inx + 1] != '/')))
+				return false;
+		}
+		prev_ch = ch;
+	}
+
+	return true;
 }

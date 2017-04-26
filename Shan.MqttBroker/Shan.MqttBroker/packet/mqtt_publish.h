@@ -15,12 +15,25 @@
 class mqtt_publish : public fixed_header {
 public:
 	mqtt_publish(const fixed_header& fh, shan::util::streambuf_ptr sb_ptr);
-	mqtt_publish(bool dup, uint8_t qos, bool retain, std::string topic_name, uint16_t packet_id, std::vector<uint8_t>&& payload);
+	mqtt_publish(bool dup, uint8_t qos, bool retain, std::string topic_name, uint16_t packet_id, const std::vector<uint8_t>& payload);
 
 	virtual void serialize(shan::util::streambuf_ptr sb_ptr) override;
 
+	bool dup() const { return _dup; }
+	uint8_t qos() const { return _qos; }
+	bool retain() const { return _retain; }
+	
 	std::string topic_name() const { return _topic_name; }
 	uint16_t packet_id() const { return _packet_id; }
+
+	const std::vector<uint8_t>& payload() const { return _payload; }
+
+	class less {
+	public:
+		bool operator()(const std::shared_ptr<mqtt_publish>& lhs, const std::shared_ptr<mqtt_publish>& rhs) const {
+			return (lhs->topic_name() < rhs->topic_name());
+		}
+	};
 
 private:
 	bool _dup;

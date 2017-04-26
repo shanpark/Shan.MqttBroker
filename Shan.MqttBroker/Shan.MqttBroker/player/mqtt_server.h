@@ -47,14 +47,23 @@ public:
 
 	void handle_connect(shan::net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_connect> packet_ptr);
 	void handle_publish(shan::net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_publish> packet_ptr);
+	void handle_puback(shan::net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_puback> packet_ptr);
+	void handle_pubrec(shan::net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_pubrec> packet_ptr);
+	void handle_pubrel(shan::net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_pubrel> packet_ptr);
+	void handle_pubcomp(shan::net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_pubcomp> packet_ptr);
+	void handle_subscribe(shan::net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_subscribe> packet_ptr);
 
 private:
 	std::shared_ptr<shan::net::tcp_server_base> _service_ptr;
 
-	std::unordered_map<std::string, mqtt_client_ptr> _clients;
-	std::unordered_map<std::string, session_ptr> _sessions;
-	std::map<std::string, std::shared_ptr<topic>> _topics;
-	std::map<std::string, std::shared_ptr<topic>> _wild_topics;
+	std::unordered_map<std::string, mqtt_client_ptr> _clients; // <client_id, client>
+
+	std::map<std::string, topic_ptr> _topics; // <topic_filter, topic>
+	std::map<std::string, topic_ptr> _wild_topics; // <topic_filter, topic>
+
+	std::set<std::shared_ptr<mqtt_publish>, mqtt_publish::less> _retained_messages;
+
+	std::unordered_map<std::string, session_ptr> _sessions; // <client_id, session>
 };
 
 #endif /* mqtt_server_h */

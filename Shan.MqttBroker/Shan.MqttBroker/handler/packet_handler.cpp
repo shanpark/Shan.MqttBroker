@@ -34,19 +34,19 @@ void packet_handler::channel_read(tcp_channel_context_base* ctx, shan::object_pt
 			_server->handle_publish(ctx, std::static_pointer_cast<mqtt_publish>(packet_ptr));
 			break;
 		case PUBACK:
-			std::static_pointer_cast<mqtt_puback>(packet_ptr);
+			_server->handle_puback(ctx, std::static_pointer_cast<mqtt_puback>(packet_ptr));
 			break;
 		case PUBREC:
-			std::static_pointer_cast<mqtt_pubrec>(packet_ptr);
+			_server->handle_pubrec(ctx, std::static_pointer_cast<mqtt_pubrec>(packet_ptr));
 			break;
 		case PUBREL:
-			std::static_pointer_cast<mqtt_pubrel>(packet_ptr);
+			_server->handle_pubrel(ctx, std::static_pointer_cast<mqtt_pubrel>(packet_ptr));
 			break;
 		case PUBCOMP:
-			std::static_pointer_cast<mqtt_pubcomp>(packet_ptr);
+			_server->handle_pubcomp(ctx, std::static_pointer_cast<mqtt_pubcomp>(packet_ptr));
 			break;
 		case SUBSCRIBE:
-			std::static_pointer_cast<mqtt_subscribe>(packet_ptr);
+			_server->handle_subscribe(ctx, std::static_pointer_cast<mqtt_subscribe>(packet_ptr));
 			break;
 		case SUBACK:
 			throw mqtt_error("SUBACK packet was received.");

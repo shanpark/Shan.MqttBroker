@@ -20,7 +20,6 @@
 		90306CB01EAF018100DCCD97 /* config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90306CAF1EAF018100DCCD97 /* config.cpp */; };
 		90306CB41EAF039700DCCD97 /* session.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90306CB31EAF039700DCCD97 /* session.cpp */; };
 		90306CB71EAF133800DCCD97 /* subscription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90306CB61EAF133800DCCD97 /* subscription.cpp */; };
-		90306CBA1EAF282B00DCCD97 /* topic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90306CB91EAF282B00DCCD97 /* topic.cpp */; };
 		907FE9EE1EAD9AA000D2B4D6 /* mqtt_pubrel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907FE9ED1EAD9AA000D2B4D6 /* mqtt_pubrel.cpp */; };
 		907FE9F11EAD9B8000D2B4D6 /* mqtt_pubcomp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907FE9F01EAD9B8000D2B4D6 /* mqtt_pubcomp.cpp */; };
 		907FE9F41EAD9CA900D2B4D6 /* mqtt_subscribe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907FE9F31EAD9CA900D2B4D6 /* mqtt_subscribe.cpp */; };
@@ -30,6 +29,7 @@
 		907FEA021EADC79800D2B4D6 /* mqtt_pingreq.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907FEA011EADC79800D2B4D6 /* mqtt_pingreq.cpp */; };
 		907FEA051EADD30500D2B4D6 /* mqtt_pingresp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907FEA041EADD30500D2B4D6 /* mqtt_pingresp.cpp */; };
 		907FEA081EADD47500D2B4D6 /* mqtt_disconnect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907FEA071EADD47500D2B4D6 /* mqtt_disconnect.cpp */; };
+		909D42A01EB03B58005AAE5C /* topic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 909D429E1EB03B58005AAE5C /* topic.cpp */; };
 		90AA6AEB1EACADF5002ABCE1 /* mqtt_publish.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90AA6AEA1EACADF5002ABCE1 /* mqtt_publish.cpp */; };
 		90AA6AEE1EACE57E002ABCE1 /* mqtt_puback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90AA6AED1EACE57E002ABCE1 /* mqtt_puback.cpp */; };
 		90AA6AF11EACE7D1002ABCE1 /* mqtt_pubrec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90AA6AF01EACE7D1002ABCE1 /* mqtt_pubrec.cpp */; };
@@ -76,8 +76,6 @@
 		90306CB31EAF039700DCCD97 /* session.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = session.cpp; path = object/session.cpp; sourceTree = "<group>"; };
 		90306CB51EAF132600DCCD97 /* subscription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = subscription.h; path = object/subscription.h; sourceTree = "<group>"; };
 		90306CB61EAF133800DCCD97 /* subscription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = subscription.cpp; path = object/subscription.cpp; sourceTree = "<group>"; };
-		90306CB81EAF281500DCCD97 /* topic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = topic.h; path = object/topic.h; sourceTree = "<group>"; };
-		90306CB91EAF282B00DCCD97 /* topic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = topic.cpp; path = object/topic.cpp; sourceTree = "<group>"; };
 		907FE9EC1EAD9A8E00D2B4D6 /* mqtt_pubrel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_pubrel.h; path = packet/mqtt_pubrel.h; sourceTree = "<group>"; };
 		907FE9ED1EAD9AA000D2B4D6 /* mqtt_pubrel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_pubrel.cpp; path = packet/mqtt_pubrel.cpp; sourceTree = "<group>"; };
 		907FE9EF1EAD9B6E00D2B4D6 /* mqtt_pubcomp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_pubcomp.h; path = packet/mqtt_pubcomp.h; sourceTree = "<group>"; };
@@ -96,6 +94,8 @@
 		907FEA041EADD30500D2B4D6 /* mqtt_pingresp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_pingresp.cpp; path = packet/mqtt_pingresp.cpp; sourceTree = "<group>"; };
 		907FEA061EADD46100D2B4D6 /* mqtt_disconnect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_disconnect.h; path = packet/mqtt_disconnect.h; sourceTree = "<group>"; };
 		907FEA071EADD47500D2B4D6 /* mqtt_disconnect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_disconnect.cpp; path = packet/mqtt_disconnect.cpp; sourceTree = "<group>"; };
+		909D429E1EB03B58005AAE5C /* topic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = topic.cpp; path = object/topic.cpp; sourceTree = "<group>"; };
+		909D429F1EB03B58005AAE5C /* topic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = topic.h; path = object/topic.h; sourceTree = "<group>"; };
 		90AA6AE91EACADD8002ABCE1 /* mqtt_publish.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_publish.h; path = packet/mqtt_publish.h; sourceTree = "<group>"; };
 		90AA6AEA1EACADF5002ABCE1 /* mqtt_publish.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_publish.cpp; path = packet/mqtt_publish.cpp; sourceTree = "<group>"; };
 		90AA6AEC1EACE565002ABCE1 /* mqtt_puback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_puback.h; path = packet/mqtt_puback.h; sourceTree = "<group>"; };
@@ -227,8 +227,8 @@
 				90306CB31EAF039700DCCD97 /* session.cpp */,
 				90306CB51EAF132600DCCD97 /* subscription.h */,
 				90306CB61EAF133800DCCD97 /* subscription.cpp */,
-				90306CB81EAF281500DCCD97 /* topic.h */,
-				90306CB91EAF282B00DCCD97 /* topic.cpp */,
+				909D429F1EB03B58005AAE5C /* topic.h */,
+				909D429E1EB03B58005AAE5C /* topic.cpp */,
 			);
 			name = object;
 			sourceTree = "<group>";
@@ -307,7 +307,7 @@
 				9004F36E1EAB600300547615 /* mqtt_connect.cpp in Sources */,
 				907FE9F91EADBA4600D2B4D6 /* mqtt_suback.cpp in Sources */,
 				907FE9F11EAD9B8000D2B4D6 /* mqtt_pubcomp.cpp in Sources */,
-				90306CBA1EAF282B00DCCD97 /* topic.cpp in Sources */,
+				909D42A01EB03B58005AAE5C /* topic.cpp in Sources */,
 				907FEA021EADC79800D2B4D6 /* mqtt_pingreq.cpp in Sources */,
 				90306CB71EAF133800DCCD97 /* subscription.cpp in Sources */,
 				90306CB41EAF039700DCCD97 /* session.cpp in Sources */,

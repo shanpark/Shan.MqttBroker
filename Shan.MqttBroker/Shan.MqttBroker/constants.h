@@ -50,6 +50,7 @@ enum client_stat : uint8_t {
 	CL_DISCONNECTED
 };
 
-extern config cfg;
+extern config g_cfg;
+extern shan::net::tcp_server_base* g_server_p; // singleton of server. life ends with the run().
 
 #endif /* constants_h */

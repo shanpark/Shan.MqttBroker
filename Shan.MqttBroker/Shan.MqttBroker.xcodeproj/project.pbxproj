@@ -1,0 +1,460 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9004F3541EAB276E00547615 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9004F3531EAB276E00547615 /* main.cpp */; };
+		9004F35D1EAB283800547615 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9004F35B1EAB283800547615 /* libcrypto.a */; };
+		9004F35E1EAB283800547615 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9004F35C1EAB283800547615 /* libssl.a */; };
+		9004F3621EAB2B5600547615 /* mqtt_codec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9004F3601EAB2B5600547615 /* mqtt_codec.cpp */; };
+		9004F3651EAB2C8B00547615 /* packet_handler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9004F3631EAB2C8B00547615 /* packet_handler.cpp */; };
+		9004F36A1EAB4F4700547615 /* fixed_header.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9004F3691EAB4F4700547615 /* fixed_header.cpp */; };
+		9004F36E1EAB600300547615 /* mqtt_connect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9004F36D1EAB600300547615 /* mqtt_connect.cpp */; };
+		9004F3731EAB967F00547615 /* mqtt_connack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9004F3721EAB967F00547615 /* mqtt_connack.cpp */; };
+		901A6FEB1EAEDBE200F862AF /* mqtt_server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 901A6FE91EAEDBE200F862AF /* mqtt_server.cpp */; };
+		901A6FEE1EAEDC0F00F862AF /* mqtt_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 901A6FED1EAEDC0F00F862AF /* mqtt_client.cpp */; };
+		90306CB01EAF018100DCCD97 /* config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90306CAF1EAF018100DCCD97 /* config.cpp */; };
+		90306CB41EAF039700DCCD97 /* session.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90306CB31EAF039700DCCD97 /* session.cpp */; };
+		90306CB71EAF133800DCCD97 /* subscription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90306CB61EAF133800DCCD97 /* subscription.cpp */; };
+		90306CBA1EAF282B00DCCD97 /* topic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90306CB91EAF282B00DCCD97 /* topic.cpp */; };
+		907FE9EE1EAD9AA000D2B4D6 /* mqtt_pubrel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907FE9ED1EAD9AA000D2B4D6 /* mqtt_pubrel.cpp */; };
+		907FE9F11EAD9B8000D2B4D6 /* mqtt_pubcomp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907FE9F01EAD9B8000D2B4D6 /* mqtt_pubcomp.cpp */; };
+		907FE9F41EAD9CA900D2B4D6 /* mqtt_subscribe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907FE9F31EAD9CA900D2B4D6 /* mqtt_subscribe.cpp */; };
+		907FE9F91EADBA4600D2B4D6 /* mqtt_suback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907FE9F81EADBA4600D2B4D6 /* mqtt_suback.cpp */; };
+		907FE9FC1EADC24B00D2B4D6 /* mqtt_unsubscribe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907FE9FB1EADC24B00D2B4D6 /* mqtt_unsubscribe.cpp */; };
+		907FE9FF1EADC59500D2B4D6 /* mqtt_unsuback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907FE9FE1EADC59500D2B4D6 /* mqtt_unsuback.cpp */; };
+		907FEA021EADC79800D2B4D6 /* mqtt_pingreq.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907FEA011EADC79800D2B4D6 /* mqtt_pingreq.cpp */; };
+		907FEA051EADD30500D2B4D6 /* mqtt_pingresp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907FEA041EADD30500D2B4D6 /* mqtt_pingresp.cpp */; };
+		907FEA081EADD47500D2B4D6 /* mqtt_disconnect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907FEA071EADD47500D2B4D6 /* mqtt_disconnect.cpp */; };
+		90AA6AEB1EACADF5002ABCE1 /* mqtt_publish.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90AA6AEA1EACADF5002ABCE1 /* mqtt_publish.cpp */; };
+		90AA6AEE1EACE57E002ABCE1 /* mqtt_puback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90AA6AED1EACE57E002ABCE1 /* mqtt_puback.cpp */; };
+		90AA6AF11EACE7D1002ABCE1 /* mqtt_pubrec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90AA6AF01EACE7D1002ABCE1 /* mqtt_pubrec.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9004F34E1EAB276E00547615 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		9004F3501EAB276E00547615 /* Shan.MqttBroker */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Shan.MqttBroker; sourceTree = BUILT_PRODUCTS_DIR; };
+		9004F3531EAB276E00547615 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		9004F35B1EAB283800547615 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = ../../../../../usr/local/lib/libcrypto.a; sourceTree = "<group>"; };
+		9004F35C1EAB283800547615 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = ../../../../../usr/local/lib/libssl.a; sourceTree = "<group>"; };
+		9004F3601EAB2B5600547615 /* mqtt_codec.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_codec.cpp; path = handler/mqtt_codec.cpp; sourceTree = "<group>"; };
+		9004F3611EAB2B5600547615 /* mqtt_codec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mqtt_codec.h; path = handler/mqtt_codec.h; sourceTree = "<group>"; };
+		9004F3631EAB2C8B00547615 /* packet_handler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = packet_handler.cpp; path = handler/packet_handler.cpp; sourceTree = "<group>"; };
+		9004F3641EAB2C8B00547615 /* packet_handler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packet_handler.h; path = handler/packet_handler.h; sourceTree = "<group>"; };
+		9004F3661EAB348A00547615 /* constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
+		9004F3681EAB4B7C00547615 /* fixed_header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = fixed_header.h; path = packet/fixed_header.h; sourceTree = "<group>"; };
+		9004F3691EAB4F4700547615 /* fixed_header.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fixed_header.cpp; path = packet/fixed_header.cpp; sourceTree = "<group>"; };
+		9004F36B1EAB53DE00547615 /* exception.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = exception.h; sourceTree = "<group>"; };
+		9004F36C1EAB5FEC00547615 /* mqtt_connect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_connect.h; path = packet/mqtt_connect.h; sourceTree = "<group>"; };
+		9004F36D1EAB600300547615 /* mqtt_connect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_connect.cpp; path = packet/mqtt_connect.cpp; sourceTree = "<group>"; };
+		9004F36F1EAB904100547615 /* client_checker_if.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = client_checker_if.h; path = packet/client_checker_if.h; sourceTree = "<group>"; };
+		9004F3701EAB90CB00547615 /* client_id_generator_if.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = client_id_generator_if.h; path = packet/client_id_generator_if.h; sourceTree = "<group>"; };
+		9004F3711EAB964900547615 /* mqtt_connack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_connack.h; path = packet/mqtt_connack.h; sourceTree = "<group>"; };
+		9004F3721EAB967F00547615 /* mqtt_connack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_connack.cpp; path = packet/mqtt_connack.cpp; sourceTree = "<group>"; };
+		901A6FE91EAEDBE200F862AF /* mqtt_server.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_server.cpp; path = player/mqtt_server.cpp; sourceTree = "<group>"; };
+		901A6FEA1EAEDBE200F862AF /* mqtt_server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mqtt_server.h; path = player/mqtt_server.h; sourceTree = "<group>"; };
+		901A6FEC1EAEDBFF00F862AF /* mqtt_client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_client.h; path = player/mqtt_client.h; sourceTree = "<group>"; };
+		901A6FED1EAEDC0F00F862AF /* mqtt_client.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_client.cpp; path = player/mqtt_client.cpp; sourceTree = "<group>"; };
+		90306CAE1EAF015E00DCCD97 /* config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		90306CAF1EAF018100DCCD97 /* config.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = config.cpp; sourceTree = "<group>"; };
+		90306CB21EAF038500DCCD97 /* session.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = session.h; path = object/session.h; sourceTree = "<group>"; };
+		90306CB31EAF039700DCCD97 /* session.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = session.cpp; path = object/session.cpp; sourceTree = "<group>"; };
+		90306CB51EAF132600DCCD97 /* subscription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = subscription.h; path = object/subscription.h; sourceTree = "<group>"; };
+		90306CB61EAF133800DCCD97 /* subscription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = subscription.cpp; path = object/subscription.cpp; sourceTree = "<group>"; };
+		90306CB81EAF281500DCCD97 /* topic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = topic.h; path = object/topic.h; sourceTree = "<group>"; };
+		90306CB91EAF282B00DCCD97 /* topic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = topic.cpp; path = object/topic.cpp; sourceTree = "<group>"; };
+		907FE9EC1EAD9A8E00D2B4D6 /* mqtt_pubrel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_pubrel.h; path = packet/mqtt_pubrel.h; sourceTree = "<group>"; };
+		907FE9ED1EAD9AA000D2B4D6 /* mqtt_pubrel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_pubrel.cpp; path = packet/mqtt_pubrel.cpp; sourceTree = "<group>"; };
+		907FE9EF1EAD9B6E00D2B4D6 /* mqtt_pubcomp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_pubcomp.h; path = packet/mqtt_pubcomp.h; sourceTree = "<group>"; };
+		907FE9F01EAD9B8000D2B4D6 /* mqtt_pubcomp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_pubcomp.cpp; path = packet/mqtt_pubcomp.cpp; sourceTree = "<group>"; };
+		907FE9F21EAD9C8F00D2B4D6 /* mqtt_subscribe.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_subscribe.h; path = packet/mqtt_subscribe.h; sourceTree = "<group>"; };
+		907FE9F31EAD9CA900D2B4D6 /* mqtt_subscribe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_subscribe.cpp; path = packet/mqtt_subscribe.cpp; sourceTree = "<group>"; };
+		907FE9F71EADBA3100D2B4D6 /* mqtt_suback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_suback.h; path = packet/mqtt_suback.h; sourceTree = "<group>"; };
+		907FE9F81EADBA4600D2B4D6 /* mqtt_suback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_suback.cpp; path = packet/mqtt_suback.cpp; sourceTree = "<group>"; };
+		907FE9FA1EADC23500D2B4D6 /* mqtt_unsubscribe.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_unsubscribe.h; path = packet/mqtt_unsubscribe.h; sourceTree = "<group>"; };
+		907FE9FB1EADC24B00D2B4D6 /* mqtt_unsubscribe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_unsubscribe.cpp; path = packet/mqtt_unsubscribe.cpp; sourceTree = "<group>"; };
+		907FE9FD1EADC58100D2B4D6 /* mqtt_unsuback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_unsuback.h; path = packet/mqtt_unsuback.h; sourceTree = "<group>"; };
+		907FE9FE1EADC59500D2B4D6 /* mqtt_unsuback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_unsuback.cpp; path = packet/mqtt_unsuback.cpp; sourceTree = "<group>"; };
+		907FEA001EADC77600D2B4D6 /* mqtt_pingreq.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_pingreq.h; path = packet/mqtt_pingreq.h; sourceTree = "<group>"; };
+		907FEA011EADC79800D2B4D6 /* mqtt_pingreq.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_pingreq.cpp; path = packet/mqtt_pingreq.cpp; sourceTree = "<group>"; };
+		907FEA031EADD2F000D2B4D6 /* mqtt_pingresp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_pingresp.h; path = packet/mqtt_pingresp.h; sourceTree = "<group>"; };
+		907FEA041EADD30500D2B4D6 /* mqtt_pingresp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_pingresp.cpp; path = packet/mqtt_pingresp.cpp; sourceTree = "<group>"; };
+		907FEA061EADD46100D2B4D6 /* mqtt_disconnect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_disconnect.h; path = packet/mqtt_disconnect.h; sourceTree = "<group>"; };
+		907FEA071EADD47500D2B4D6 /* mqtt_disconnect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_disconnect.cpp; path = packet/mqtt_disconnect.cpp; sourceTree = "<group>"; };
+		90AA6AE91EACADD8002ABCE1 /* mqtt_publish.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_publish.h; path = packet/mqtt_publish.h; sourceTree = "<group>"; };
+		90AA6AEA1EACADF5002ABCE1 /* mqtt_publish.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_publish.cpp; path = packet/mqtt_publish.cpp; sourceTree = "<group>"; };
+		90AA6AEC1EACE565002ABCE1 /* mqtt_puback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_puback.h; path = packet/mqtt_puback.h; sourceTree = "<group>"; };
+		90AA6AED1EACE57E002ABCE1 /* mqtt_puback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_puback.cpp; path = packet/mqtt_puback.cpp; sourceTree = "<group>"; };
+		90AA6AEF1EACE7B9002ABCE1 /* mqtt_pubrec.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_pubrec.h; path = packet/mqtt_pubrec.h; sourceTree = "<group>"; };
+		90AA6AF01EACE7D1002ABCE1 /* mqtt_pubrec.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_pubrec.cpp; path = packet/mqtt_pubrec.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9004F34D1EAB276E00547615 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9004F35D1EAB283800547615 /* libcrypto.a in Frameworks */,
+				9004F35E1EAB283800547615 /* libssl.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9004F3471EAB276E00547615 = {
+			isa = PBXGroup;
+			children = (
+				9004F3521EAB276E00547615 /* Shan.MqttBroker */,
+				9004F3511EAB276E00547615 /* Products */,
+				9004F35A1EAB283800547615 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		9004F3511EAB276E00547615 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9004F3501EAB276E00547615 /* Shan.MqttBroker */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9004F3521EAB276E00547615 /* Shan.MqttBroker */ = {
+			isa = PBXGroup;
+			children = (
+				90306CB11EAF036600DCCD97 /* object */,
+				901A6FE81EAEDB6A00F862AF /* player */,
+				9004F3671EAB39C200547615 /* packet */,
+				9004F35F1EAB2B2200547615 /* handler */,
+				9004F3661EAB348A00547615 /* constants.h */,
+				9004F36B1EAB53DE00547615 /* exception.h */,
+				90306CAE1EAF015E00DCCD97 /* config.h */,
+				90306CAF1EAF018100DCCD97 /* config.cpp */,
+				9004F3531EAB276E00547615 /* main.cpp */,
+			);
+			path = Shan.MqttBroker;
+			sourceTree = "<group>";
+		};
+		9004F35A1EAB283800547615 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9004F35B1EAB283800547615 /* libcrypto.a */,
+				9004F35C1EAB283800547615 /* libssl.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9004F35F1EAB2B2200547615 /* handler */ = {
+			isa = PBXGroup;
+			children = (
+				9004F3611EAB2B5600547615 /* mqtt_codec.h */,
+				9004F3601EAB2B5600547615 /* mqtt_codec.cpp */,
+				9004F3641EAB2C8B00547615 /* packet_handler.h */,
+				9004F3631EAB2C8B00547615 /* packet_handler.cpp */,
+			);
+			name = handler;
+			sourceTree = "<group>";
+		};
+		9004F3671EAB39C200547615 /* packet */ = {
+			isa = PBXGroup;
+			children = (
+				9004F3681EAB4B7C00547615 /* fixed_header.h */,
+				9004F3691EAB4F4700547615 /* fixed_header.cpp */,
+				9004F36C1EAB5FEC00547615 /* mqtt_connect.h */,
+				9004F36D1EAB600300547615 /* mqtt_connect.cpp */,
+				9004F3711EAB964900547615 /* mqtt_connack.h */,
+				9004F3721EAB967F00547615 /* mqtt_connack.cpp */,
+				90AA6AE91EACADD8002ABCE1 /* mqtt_publish.h */,
+				90AA6AEA1EACADF5002ABCE1 /* mqtt_publish.cpp */,
+				90AA6AEC1EACE565002ABCE1 /* mqtt_puback.h */,
+				90AA6AED1EACE57E002ABCE1 /* mqtt_puback.cpp */,
+				90AA6AEF1EACE7B9002ABCE1 /* mqtt_pubrec.h */,
+				90AA6AF01EACE7D1002ABCE1 /* mqtt_pubrec.cpp */,
+				907FE9EC1EAD9A8E00D2B4D6 /* mqtt_pubrel.h */,
+				907FE9ED1EAD9AA000D2B4D6 /* mqtt_pubrel.cpp */,
+				907FE9EF1EAD9B6E00D2B4D6 /* mqtt_pubcomp.h */,
+				907FE9F01EAD9B8000D2B4D6 /* mqtt_pubcomp.cpp */,
+				907FE9F21EAD9C8F00D2B4D6 /* mqtt_subscribe.h */,
+				907FE9F31EAD9CA900D2B4D6 /* mqtt_subscribe.cpp */,
+				907FE9F71EADBA3100D2B4D6 /* mqtt_suback.h */,
+				907FE9F81EADBA4600D2B4D6 /* mqtt_suback.cpp */,
+				907FE9FA1EADC23500D2B4D6 /* mqtt_unsubscribe.h */,
+				907FE9FB1EADC24B00D2B4D6 /* mqtt_unsubscribe.cpp */,
+				907FE9FD1EADC58100D2B4D6 /* mqtt_unsuback.h */,
+				907FE9FE1EADC59500D2B4D6 /* mqtt_unsuback.cpp */,
+				907FEA001EADC77600D2B4D6 /* mqtt_pingreq.h */,
+				907FEA011EADC79800D2B4D6 /* mqtt_pingreq.cpp */,
+				907FEA031EADD2F000D2B4D6 /* mqtt_pingresp.h */,
+				907FEA041EADD30500D2B4D6 /* mqtt_pingresp.cpp */,
+				907FEA061EADD46100D2B4D6 /* mqtt_disconnect.h */,
+				907FEA071EADD47500D2B4D6 /* mqtt_disconnect.cpp */,
+				9004F3701EAB90CB00547615 /* client_id_generator_if.h */,
+				9004F36F1EAB904100547615 /* client_checker_if.h */,
+			);
+			name = packet;
+			sourceTree = "<group>";
+		};
+		901A6FE81EAEDB6A00F862AF /* player */ = {
+			isa = PBXGroup;
+			children = (
+				901A6FEA1EAEDBE200F862AF /* mqtt_server.h */,
+				901A6FE91EAEDBE200F862AF /* mqtt_server.cpp */,
+				901A6FEC1EAEDBFF00F862AF /* mqtt_client.h */,
+				901A6FED1EAEDC0F00F862AF /* mqtt_client.cpp */,
+			);
+			name = player;
+			sourceTree = "<group>";
+		};
+		90306CB11EAF036600DCCD97 /* object */ = {
+			isa = PBXGroup;
+			children = (
+				90306CB21EAF038500DCCD97 /* session.h */,
+				90306CB31EAF039700DCCD97 /* session.cpp */,
+				90306CB51EAF132600DCCD97 /* subscription.h */,
+				90306CB61EAF133800DCCD97 /* subscription.cpp */,
+				90306CB81EAF281500DCCD97 /* topic.h */,
+				90306CB91EAF282B00DCCD97 /* topic.cpp */,
+			);
+			name = object;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9004F34F1EAB276E00547615 /* Shan.MqttBroker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9004F3571EAB276E00547615 /* Build configuration list for PBXNativeTarget "Shan.MqttBroker" */;
+			buildPhases = (
+				9004F34C1EAB276E00547615 /* Sources */,
+				9004F34D1EAB276E00547615 /* Frameworks */,
+				9004F34E1EAB276E00547615 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Shan.MqttBroker;
+			productName = Shan.MqttBroker;
+			productReference = 9004F3501EAB276E00547615 /* Shan.MqttBroker */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9004F3481EAB276E00547615 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0810;
+				ORGANIZATIONNAME = "Sung Han Park";
+				TargetAttributes = {
+					9004F34F1EAB276E00547615 = {
+						CreatedOnToolsVersion = 8.1;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 9004F34B1EAB276E00547615 /* Build configuration list for PBXProject "Shan.MqttBroker" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 9004F3471EAB276E00547615;
+			productRefGroup = 9004F3511EAB276E00547615 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9004F34F1EAB276E00547615 /* Shan.MqttBroker */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9004F34C1EAB276E00547615 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				901A6FEE1EAEDC0F00F862AF /* mqtt_client.cpp in Sources */,
+				907FE9FF1EADC59500D2B4D6 /* mqtt_unsuback.cpp in Sources */,
+				90306CB01EAF018100DCCD97 /* config.cpp in Sources */,
+				9004F3621EAB2B5600547615 /* mqtt_codec.cpp in Sources */,
+				907FE9EE1EAD9AA000D2B4D6 /* mqtt_pubrel.cpp in Sources */,
+				907FEA081EADD47500D2B4D6 /* mqtt_disconnect.cpp in Sources */,
+				907FEA051EADD30500D2B4D6 /* mqtt_pingresp.cpp in Sources */,
+				907FE9F41EAD9CA900D2B4D6 /* mqtt_subscribe.cpp in Sources */,
+				901A6FEB1EAEDBE200F862AF /* mqtt_server.cpp in Sources */,
+				9004F36A1EAB4F4700547615 /* fixed_header.cpp in Sources */,
+				90AA6AF11EACE7D1002ABCE1 /* mqtt_pubrec.cpp in Sources */,
+				9004F3651EAB2C8B00547615 /* packet_handler.cpp in Sources */,
+				90AA6AEE1EACE57E002ABCE1 /* mqtt_puback.cpp in Sources */,
+				9004F3541EAB276E00547615 /* main.cpp in Sources */,
+				9004F36E1EAB600300547615 /* mqtt_connect.cpp in Sources */,
+				907FE9F91EADBA4600D2B4D6 /* mqtt_suback.cpp in Sources */,
+				907FE9F11EAD9B8000D2B4D6 /* mqtt_pubcomp.cpp in Sources */,
+				90306CBA1EAF282B00DCCD97 /* topic.cpp in Sources */,
+				907FEA021EADC79800D2B4D6 /* mqtt_pingreq.cpp in Sources */,
+				90306CB71EAF133800DCCD97 /* subscription.cpp in Sources */,
+				90306CB41EAF039700DCCD97 /* session.cpp in Sources */,
+				907FE9FC1EADC24B00D2B4D6 /* mqtt_unsubscribe.cpp in Sources */,
+				9004F3731EAB967F00547615 /* mqtt_connack.cpp in Sources */,
+				90AA6AEB1EACADF5002ABCE1 /* mqtt_publish.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		9004F3551EAB276E00547615 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../Shan.Lib,
+					"../asio-1.10.8/include",
+					/usr/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		9004F3561EAB276E00547615 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../Shan.Lib,
+					"../asio-1.10.8/include",
+					/usr/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		9004F3581EAB276E00547615 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		9004F3591EAB276E00547615 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9004F34B1EAB276E00547615 /* Build configuration list for PBXProject "Shan.MqttBroker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9004F3551EAB276E00547615 /* Debug */,
+				9004F3561EAB276E00547615 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9004F3571EAB276E00547615 /* Build configuration list for PBXNativeTarget "Shan.MqttBroker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9004F3581EAB276E00547615 /* Debug */,
+				9004F3591EAB276E00547615 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9004F3481EAB276E00547615 /* Project object */;
+}

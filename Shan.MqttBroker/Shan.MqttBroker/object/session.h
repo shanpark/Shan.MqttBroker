@@ -16,6 +16,10 @@
 
 using namespace shan;
 
+//... client가 clean_session인 경우 channel_disconnected 핸들러에서도 검사해서 삭제해주어야 한다.
+/**
+ session은 관련 client에서만 access되고 client는 handler에서만 access되므로 동기화가 필요하지 않다.
+ */
 class session : public object {
 public:
 	session()
@@ -23,7 +27,9 @@ public:
 
 	uint16_t new_packet_id();
 
-	void add_subscription(std::string topic_filter, uint8_t max_qos);
+	const std::set<subscription_ptr, subscription::less>& subscriptions() const { return _subscriptions; }
+	void add_subscription(std::string topic_filter, uint8_t max_qos, bool is_wild);
+	void delete_subscription(std::string topic_filter);
 
 	void add_packet_id_for_pubrel(uint16_t packet_id);
 	void release_packet_id_for_pubrel(uint16_t packet_id);
@@ -40,7 +46,7 @@ public:
 private:
 	uint16_t _next_packet_id;
 	
-	std::set<subscription_ptr, subscription::less> _subscriptions;
+	std::set<subscription_ptr, subscription::less> _subscriptions; // <topic_filter, max_qos>
 
 	std::vector<uint16_t> _packet_id_for_pubrel; // when I'm receiver
 

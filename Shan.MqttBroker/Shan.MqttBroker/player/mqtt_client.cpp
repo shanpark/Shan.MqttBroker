@@ -14,6 +14,15 @@ mqtt_client::mqtt_client(std::shared_ptr<mqtt_connect> packet_ptr, std::size_t c
 , _will_topic(packet_ptr->will_topic()), _will_message(packet_ptr->will_message()) {
 }
 
+void mqtt_client::clear_will_message() {
+	_will_flag = false; // will not send will message.
+	
+	_will_qos = 0;
+	_will_retain = false;
+	_will_topic.clear();
+	_will_message.clear();
+}
+
 void mqtt_client::publish(uint8_t max_qos, bool retained, std::shared_ptr<mqtt_publish> packet_ptr) {
 	// The QoS of Payload Messages sent in response to a Subscription MUST be the minimum of the QoS of the originally published message and the maximum QoS granted by the Server.
 	uint8_t qos = std::min(packet_ptr->qos(), max_qos);

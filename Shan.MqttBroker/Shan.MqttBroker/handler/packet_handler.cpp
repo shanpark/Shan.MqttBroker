@@ -52,19 +52,19 @@ void packet_handler::channel_read(tcp_channel_context_base* ctx, shan::object_pt
 			throw mqtt_error("SUBACK packet was received.");
 			break;
 		case UNSUBSCRIBE:
-			std::static_pointer_cast<mqtt_unsubscribe>(packet_ptr);
+			_server->handle_unsubscribe(ctx, std::static_pointer_cast<mqtt_unsubscribe>(packet_ptr));
 			break;
 		case UNSUBACK:
 			throw mqtt_error("UNSUBACK packet was received.");
 			break;
 		case PINGREQ:
-			std::static_pointer_cast<mqtt_pingreq>(packet_ptr);
+			_server->handle_pingreq(ctx, std::static_pointer_cast<mqtt_pingreq>(packet_ptr));
 			break;
 		case PINGRESP:
 			throw mqtt_error("PINGRESP packet was received.");
 			break;
 		case DISCONNECT:
-			std::static_pointer_cast<mqtt_disconnect>(packet_ptr);
+			_server->handle_disconnect(ctx, std::static_pointer_cast<mqtt_disconnect>(packet_ptr));
 			break;
 	}
 }

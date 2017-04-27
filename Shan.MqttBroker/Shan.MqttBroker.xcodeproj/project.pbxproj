@@ -19,7 +19,6 @@
 		901A6FEE1EAEDC0F00F862AF /* mqtt_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 901A6FED1EAEDC0F00F862AF /* mqtt_client.cpp */; };
 		90306CB01EAF018100DCCD97 /* config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90306CAF1EAF018100DCCD97 /* config.cpp */; };
 		90306CB41EAF039700DCCD97 /* session.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90306CB31EAF039700DCCD97 /* session.cpp */; };
-		90306CB71EAF133800DCCD97 /* subscription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90306CB61EAF133800DCCD97 /* subscription.cpp */; };
 		907FE9EE1EAD9AA000D2B4D6 /* mqtt_pubrel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907FE9ED1EAD9AA000D2B4D6 /* mqtt_pubrel.cpp */; };
 		907FE9F11EAD9B8000D2B4D6 /* mqtt_pubcomp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907FE9F01EAD9B8000D2B4D6 /* mqtt_pubcomp.cpp */; };
 		907FE9F41EAD9CA900D2B4D6 /* mqtt_subscribe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907FE9F31EAD9CA900D2B4D6 /* mqtt_subscribe.cpp */; };
@@ -33,6 +32,7 @@
 		90AA6AEB1EACADF5002ABCE1 /* mqtt_publish.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90AA6AEA1EACADF5002ABCE1 /* mqtt_publish.cpp */; };
 		90AA6AEE1EACE57E002ABCE1 /* mqtt_puback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90AA6AED1EACE57E002ABCE1 /* mqtt_puback.cpp */; };
 		90AA6AF11EACE7D1002ABCE1 /* mqtt_pubrec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90AA6AF01EACE7D1002ABCE1 /* mqtt_pubrec.cpp */; };
+		90F7CB751EB1D04500E30470 /* subscription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90F7CB731EB1D04500E30470 /* subscription.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -74,8 +74,6 @@
 		90306CAF1EAF018100DCCD97 /* config.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = config.cpp; sourceTree = "<group>"; };
 		90306CB21EAF038500DCCD97 /* session.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = session.h; path = object/session.h; sourceTree = "<group>"; };
 		90306CB31EAF039700DCCD97 /* session.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = session.cpp; path = object/session.cpp; sourceTree = "<group>"; };
-		90306CB51EAF132600DCCD97 /* subscription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = subscription.h; path = object/subscription.h; sourceTree = "<group>"; };
-		90306CB61EAF133800DCCD97 /* subscription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = subscription.cpp; path = object/subscription.cpp; sourceTree = "<group>"; };
 		907FE9EC1EAD9A8E00D2B4D6 /* mqtt_pubrel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_pubrel.h; path = packet/mqtt_pubrel.h; sourceTree = "<group>"; };
 		907FE9ED1EAD9AA000D2B4D6 /* mqtt_pubrel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_pubrel.cpp; path = packet/mqtt_pubrel.cpp; sourceTree = "<group>"; };
 		907FE9EF1EAD9B6E00D2B4D6 /* mqtt_pubcomp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_pubcomp.h; path = packet/mqtt_pubcomp.h; sourceTree = "<group>"; };
@@ -102,6 +100,8 @@
 		90AA6AED1EACE57E002ABCE1 /* mqtt_puback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_puback.cpp; path = packet/mqtt_puback.cpp; sourceTree = "<group>"; };
 		90AA6AEF1EACE7B9002ABCE1 /* mqtt_pubrec.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_pubrec.h; path = packet/mqtt_pubrec.h; sourceTree = "<group>"; };
 		90AA6AF01EACE7D1002ABCE1 /* mqtt_pubrec.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_pubrec.cpp; path = packet/mqtt_pubrec.cpp; sourceTree = "<group>"; };
+		90F7CB731EB1D04500E30470 /* subscription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = subscription.cpp; path = object/subscription.cpp; sourceTree = "<group>"; };
+		90F7CB741EB1D04500E30470 /* subscription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = subscription.h; path = object/subscription.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -225,8 +225,8 @@
 			children = (
 				90306CB21EAF038500DCCD97 /* session.h */,
 				90306CB31EAF039700DCCD97 /* session.cpp */,
-				90306CB51EAF132600DCCD97 /* subscription.h */,
-				90306CB61EAF133800DCCD97 /* subscription.cpp */,
+				90F7CB741EB1D04500E30470 /* subscription.h */,
+				90F7CB731EB1D04500E30470 /* subscription.cpp */,
 				909D429F1EB03B58005AAE5C /* topic.h */,
 				909D429E1EB03B58005AAE5C /* topic.cpp */,
 			);
@@ -296,6 +296,7 @@
 				9004F3621EAB2B5600547615 /* mqtt_codec.cpp in Sources */,
 				907FE9EE1EAD9AA000D2B4D6 /* mqtt_pubrel.cpp in Sources */,
 				907FEA081EADD47500D2B4D6 /* mqtt_disconnect.cpp in Sources */,
+				90F7CB751EB1D04500E30470 /* subscription.cpp in Sources */,
 				907FEA051EADD30500D2B4D6 /* mqtt_pingresp.cpp in Sources */,
 				907FE9F41EAD9CA900D2B4D6 /* mqtt_subscribe.cpp in Sources */,
 				901A6FEB1EAEDBE200F862AF /* mqtt_server.cpp in Sources */,
@@ -309,7 +310,6 @@
 				907FE9F11EAD9B8000D2B4D6 /* mqtt_pubcomp.cpp in Sources */,
 				909D42A01EB03B58005AAE5C /* topic.cpp in Sources */,
 				907FEA021EADC79800D2B4D6 /* mqtt_pingreq.cpp in Sources */,
-				90306CB71EAF133800DCCD97 /* subscription.cpp in Sources */,
 				90306CB41EAF039700DCCD97 /* session.cpp in Sources */,
 				907FE9FC1EADC24B00D2B4D6 /* mqtt_unsubscribe.cpp in Sources */,
 				9004F3731EAB967F00547615 /* mqtt_connack.cpp in Sources */,

@@ -19,7 +19,10 @@ public:
 	virtual void serialize(shan::util::streambuf_ptr sb_ptr) override;
 
 	void add_topic_filter(std::string topic_filter);
-
+	
+	uint16_t packet_id() const { return _packet_id; }
+	const std::vector<std::string>& topic_filters() const { return _topic_filters; }
+	
 private:
 	uint16_t _packet_id;
 	std::vector<std::string> _topic_filters;

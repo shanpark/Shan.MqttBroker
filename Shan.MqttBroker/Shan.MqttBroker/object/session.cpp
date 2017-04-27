@@ -18,25 +18,37 @@ uint16_t session::new_packet_id() {
 			return (publish_ptr->packet_id() == new_id);
 		};
 
+		// 내가 시작한 packet 송수신들에서 이미 사용중인 id는 사용해서는 안된다.
+		// 아래 기록들은 server가 전송한 publish 패킷 송수신 시나리오에서 응답을 기다리는 것들이다.
+		// 여기에서 사용되고 있다면 다른 id를 다시 받도록 한다.
 		if (std::find_if(_publish_for_ack.begin(), _publish_for_ack.end(), pred) != _publish_for_ack.end())
 			continue; // already used. try next.
 
 		if (std::find_if(_publish_for_rec.begin(), _publish_for_rec.end(), pred) != _publish_for_rec.end())
 			continue; // already used. try next.
 
-		//... 위의 두 벡터 말고 더 있있면 그것도 여기 추가해 주어야 한다.
+		if (std::find(_packet_id_for_pubcomp.begin(), _packet_id_for_pubcomp.end(), new_id) != _packet_id_for_pubcomp.end())
+			continue;
+		
+		// 서버가 시작하는 패킷은 PUBLISH 밖에 없으므로 위의 3가지 경우가 packet id를 생성해서 사용중인 경우의 전부이다.
+		
 		return new_id;
 	} while (true);
 }
 
-void session::add_subscription(std::string topic_filter, uint8_t max_qos) {
-	auto sub_ptr = std::make_shared<subscription>(topic_filter, max_qos);
-
-	auto it = _subscriptions.find(sub_ptr);
-	if (it != _subscriptions.end())
-		_subscriptions.erase(it);
-
+void session::add_subscription(std::string topic_filter, uint8_t max_qos, bool is_wild) {
+	auto sub_ptr = std::make_shared<subscription>(topic_filter, max_qos, is_wild);
+	
+	// 기존의 subscription을 삭제하고
+	_subscriptions.erase(sub_ptr); // 같은 topic_filter를 갖는 subscription이 사제될 것이다.
+	
+	// 다시 새로운 subscription을 넣는다.
 	_subscriptions.insert(sub_ptr);
+}
+
+void session::delete_subscription(std::string topic_filter) {
+	auto sub_ptr = std::make_shared<subscription>(topic_filter, 0, false); // search를 위해 임시 객체 생성
+	_subscriptions.erase(sub_ptr);
 }
 
 void session::add_packet_id_for_pubrel(uint16_t packet_id) {

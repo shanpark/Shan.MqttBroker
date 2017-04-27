@@ -30,6 +30,7 @@ std::string mqtt_server::generate_unique_id() {
 
 mqtt_client_ptr mqtt_server::get_client_ptr(std::string client_id) {
 	try {
+		std::lock_guard<std::mutex> lock(_client_mutex);
 		return _clients.at(client_id);
 	} catch (const std::exception&) {
 		return nullptr;
@@ -37,11 +38,13 @@ mqtt_client_ptr mqtt_server::get_client_ptr(std::string client_id) {
 }
 
 void mqtt_server::reg_client_ptr(mqtt_client_ptr c_ptr) {
+	std::lock_guard<std::mutex> lock(_client_mutex);
 	_clients.insert(std::make_pair(c_ptr->client_id(), c_ptr));
 }
 
 session_ptr mqtt_server::get_session_ptr(std::string client_id) {
 	try {
+		std::lock_guard<std::mutex> lock(_session_mutex);
 		return _sessions.at(client_id);
 	} catch (const std::exception&) {
 		return nullptr;
@@ -49,11 +52,51 @@ session_ptr mqtt_server::get_session_ptr(std::string client_id) {
 }
 
 void mqtt_server::reg_session_ptr(std::string client_id, session_ptr s_ptr) {
+	std::lock_guard<std::mutex> lock(_session_mutex);
 	_sessions.insert(std::make_pair(client_id, s_ptr));
 }
 
 bool mqtt_server::authorize(std::string username, std::vector<uint8_t> password) {
 	return true; // TODO
+}
+
+topic_ptr mqtt_server::get_topic_ptr_to_subscribe(std::string topic_filter, bool is_wild) {
+	topic_ptr t_ptr;
+	
+	if (is_wild) {
+		std::lock_guard<std::mutex> lock(_topic_mutex);
+		try {
+			t_ptr = _wild_topics.at(topic_filter);
+		} catch (const std::exception& e) {
+			t_ptr =  std::make_shared<topic>(topic_filter);
+			_wild_topics.insert(std::make_pair(topic_filter, t_ptr));
+		}
+	}
+	else {
+		std::lock_guard<std::mutex> lock(_topic_mutex);
+		try {
+			t_ptr = _topics.at(topic_filter);
+		} catch (const std::exception& e) {
+			t_ptr =  std::make_shared<topic>(topic_filter);
+			_topics.insert(std::make_pair(topic_filter, t_ptr));
+		}
+	}
+	
+	return t_ptr;
+}
+
+void mqtt_server::publish_retained_message(net::tcp_channel_context_base* ctx, const std::vector<topic_ptr>& subscribed_topics, const std::vector<topic_ptr>& subscribed_wild_topics) {
+	for (auto t_ptr : subscribed_topics)
+		if (t_ptr->retained_message())
+			t_ptr->publish_retained(ctx, t_ptr->retained_message()); // topic이 등록된 qos를 가지고 있기 때문에 topic을 통해서 보내야 한다.
+	
+	for (auto wt_ptr : subscribed_wild_topics) {
+		std::lock_guard<std::mutex> lock(_topic_mutex);
+		for (auto pair : _topics) {
+			if (pair.second->retained_message() && topic::match(wt_ptr->topic_filter(), pair.second->topic_filter()))
+				wt_ptr->publish_retained(ctx, pair.second->retained_message());
+		}
+	}
 }
 
 void mqtt_server::handle_connect(net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_connect> packet_ptr) {
@@ -80,21 +123,15 @@ void mqtt_server::handle_connect(net::tcp_channel_context_base* ctx, std::shared
 	// CONNECT 패킷의 clean_session이 false이면 저장된 session을 복구해준다.
 	bool session_present = false; // 복구된 경우 session_present를 true로 설정해준다.
 	if (!client_ptr->clean_session()) {
-		auto session_ptr = get_session_ptr(client_ptr->client_id());
-		if (session_ptr) {
-			client_ptr->set_session_ptr(session_ptr);
-			//... session에 있는 subscription 정보를 다시 복구해야 한다.
-			// client는 다시 subscribe를 할 필요가 없다. 따라서 session에 있는 subscription정보를
-			// 가지고 다시 subscribe 상태를 만들어야 한다.
-			// 여기서 다시 retained message도 보내줘야 맞는 것 같다. 재접속했으니까 마지막 상태 메시지를 다시 받는게 맞겠지.
-			// 여기서 다시할 게 아니라 connack를 보낸 후에 복구해 주는 게 맞지 않을까?
-			// 그래야 CONNACK 후에 retained 메시지가 도착 할 듯.
+		auto s_ptr = get_session_ptr(client_ptr->client_id());
+		if (s_ptr) {
+			client_ptr->set_session_ptr(s_ptr);
 			session_present = true;
 		}
 		else {
-			auto new_session_ptr = std::make_shared<session>(); // alloc new session.
-			reg_session_ptr(client_ptr->client_id(), new_session_ptr);
-			client_ptr->set_session_ptr(new_session_ptr);
+			auto new_s_ptr = std::make_shared<session>(); // alloc new session.
+			reg_session_ptr(client_ptr->client_id(), new_s_ptr);
+			client_ptr->set_session_ptr(new_s_ptr);
 			session_present = false;
 		}
 	}
@@ -127,6 +164,31 @@ void mqtt_server::handle_connect(net::tcp_channel_context_base* ctx, std::shared
 	// keep alive 설정.
 	net::tcp_idle_monitor* idle_monitor = static_cast<net::tcp_idle_monitor*>(_service_ptr->get_channel_handler_ptr(0).get());
 	idle_monitor->reset_channel_timer(ctx->channel_id(), ID_CLIENT_IDLE, packet_ptr->keep_alive() * 1500, nullptr); // keep_alive x 1.5
+	
+	// 새로 복구된 session의 subscription들을 복구해 준다. 복구된 session이 있으면 client는 다시 subscribe를 하지 않는다.
+	// 따라서 session에 저장된 subscription 정보를 토대로 다시 복구해 주어야 하고 retained message들도 보내주는 게 맞다.
+ 	if (session_present) {
+		auto s_ptr = client_ptr->get_session_ptr();
+		std::vector<topic_ptr> subscribed_topics;
+		std::vector<topic_ptr> subscribed_wild_topics;
+		for (auto sub_ptr : s_ptr->subscriptions()) { // <topic_filter, max_qos>
+			auto& topic_filter = sub_ptr->topic_filter();
+			auto max_qos = sub_ptr->max_qos();
+			auto is_wild = sub_ptr->is_wild();
+			
+			topic_ptr t_ptr = get_topic_ptr_to_subscribe(topic_filter, is_wild);
+			if (is_wild)
+				subscribed_wild_topics.push_back(t_ptr); // for retained message.
+			else
+				subscribed_topics.push_back(t_ptr); // for retained message.
+
+			// add client to topic.
+			t_ptr->subscribe(client_ptr, max_qos);
+		}
+		
+		// then send retained message
+		publish_retained_message(ctx, subscribed_topics, subscribed_wild_topics);
+	}
 }
 
 void mqtt_server::handle_publish(net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_publish> packet_ptr) {
@@ -141,27 +203,32 @@ void mqtt_server::handle_publish(net::tcp_channel_context_base* ctx, std::shared
 		ctx->write(std::make_shared<mqtt_pubrec>(packet_ptr->packet_id()));
 	}
 
-	// handle retain message
-	if (packet_ptr->retain()) {
-		//... packet의 payload 길이가 0이면 이전 retained 메시지를 삭제하고 새로 등록은 하지 말아야 한다.
-		// 근데 길이 0인 메시지를 보내긴 했던 것 같은데.. 스펙 찾아볼 것..
-		_retained_messages.insert(packet_ptr);
-	}
-
 	// forwarding publish
 	bool sent = false;
 	try {
-		auto topic_ptr = _topics.at(packet_ptr->topic_name());
-		topic_ptr->publish(packet_ptr);
-		sent = true;
+		topic_ptr t_ptr;
+		{
+			std::lock_guard<std::mutex> lock(_topic_mutex);
+			t_ptr = _topics.at(packet_ptr->topic_name());
+		}
+		
+		if (packet_ptr->retain()) {
+			if (packet_ptr->payload().size() == 0)
+				t_ptr->retained_message(nullptr); // 기존 retained message 삭제.
+			else
+				t_ptr->retained_message(packet_ptr); // 새 message로 교체.
+		}
+		sent = t_ptr->publish(packet_ptr); // payload 길이가 0인 retain message도 정상적으로 보내는 게 맞다.
 	} catch (const std::exception&) {
 		// no matching topic exists. do nothing.
 	}
 
-	for (auto pair : _wild_topics) {
-		if (topic::match(pair.first, packet_ptr->topic_name())) {
-			pair.second->publish(packet_ptr);
-			sent = true;
+	{ // wild topic들 중에 matcing되는 topic들에게도 보낸다.
+		std::lock_guard<std::mutex> lock(_topic_mutex);
+		for (auto pair : _wild_topics) {
+			if (topic::match(pair.first, packet_ptr->topic_name())) {
+				sent = pair.second->publish(packet_ptr);
+			}
 		}
 	}
 
@@ -174,36 +241,37 @@ void mqtt_server::handle_publish(net::tcp_channel_context_base* ctx, std::shared
 	}
 }
 
-void mqtt_server::handle_puback(shan::net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_puback> packet_ptr) {
+void mqtt_server::handle_puback(net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_puback> packet_ptr) {
 	mqtt_client_ptr receiver_agent_ptr = std::static_pointer_cast<mqtt_client>(ctx->param());
 
 	receiver_agent_ptr->handle_puback(packet_ptr);
 }
 
-void mqtt_server::handle_pubrec(shan::net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_pubrec> packet_ptr) {
+void mqtt_server::handle_pubrec(net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_pubrec> packet_ptr) {
 	mqtt_client_ptr receiver_agent_ptr = std::static_pointer_cast<mqtt_client>(ctx->param());
 
 	receiver_agent_ptr->handle_pubrec(packet_ptr);
 }
 
-void mqtt_server::handle_pubrel(shan::net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_pubrel> packet_ptr) {
+void mqtt_server::handle_pubrel(net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_pubrel> packet_ptr) {
 	mqtt_client_ptr receiver_agent_ptr = std::static_pointer_cast<mqtt_client>(ctx->param());
 
 	receiver_agent_ptr->handle_pubrel(packet_ptr);
 }
 
-void mqtt_server::handle_pubcomp(shan::net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_pubcomp> packet_ptr) {
+void mqtt_server::handle_pubcomp(net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_pubcomp> packet_ptr) {
 	mqtt_client_ptr receiver_agent_ptr = std::static_pointer_cast<mqtt_client>(ctx->param());
 
 	receiver_agent_ptr->handle_pubcomp(packet_ptr);
 }
 
-void mqtt_server::handle_subscribe(shan::net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_subscribe> packet_ptr) {
+void mqtt_server::handle_subscribe(net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_subscribe> packet_ptr) {
 	mqtt_client_ptr sender_agent_ptr = std::static_pointer_cast<mqtt_client>(ctx->param());
 
 	auto suback_ptr = std::make_shared<mqtt_suback>(packet_ptr->packet_id());
 
-	std::vector<topic_ptr> subscribed;
+	std::vector<topic_ptr> subscribed_topics;
+	std::vector<topic_ptr> subscribed_wild_topics;
 
 	auto count = packet_ptr->topic_filters().size();
 	for (auto inx = 0 ; inx < count ; inx++) {
@@ -211,45 +279,71 @@ void mqtt_server::handle_subscribe(shan::net::tcp_channel_context_base* ctx, std
 		auto max_qos = packet_ptr->max_qoses()[inx];
 		auto is_wild = packet_ptr->is_wild()[inx];
 
-		topic_ptr t_ptr;
-		if (is_wild) {
-			try {
-				t_ptr = _wild_topics.at(topic_filter);
-			} catch (const std::exception& e) {
-				t_ptr =  std::make_shared<topic>(topic_filter);
-				_wild_topics.insert(std::make_pair(topic_filter, t_ptr));
-			}
-		}
-		else {
-			try {
-				t_ptr = _topics.at(topic_filter);
-			} catch (const std::exception& e) {
-				t_ptr =  std::make_shared<topic>(topic_filter);
-				_topics.insert(std::make_pair(topic_filter, t_ptr));
-			}
-		}
+		topic_ptr t_ptr = get_topic_ptr_to_subscribe(topic_filter, is_wild);
+		if (is_wild)
+			subscribed_wild_topics.push_back(t_ptr); // for retained message.
+		else
+			subscribed_topics.push_back(t_ptr); // for retained message.
 
 		// add client to topic.
 		t_ptr->subscribe(sender_agent_ptr, max_qos);
 
 		// add subscription to session.
-		sender_agent_ptr->get_session_ptr()->add_subscription(topic_filter, max_qos);
+		sender_agent_ptr->get_session_ptr()->add_subscription(topic_filter, max_qos, is_wild);
 
 		// add return code
 		suback_ptr->add_return_code(max_qos); // client가 요청한 qos 그대로 허용한다.
-
-		// save to publish retained message
-		subscribed.push_back(t_ptr);
 	}
 
 	// send SUBACK first
 	ctx->write(suback_ptr);
 
 	// then send retained message
-	for (auto t_ptr : subscribed) {
-		for (auto publish_ptr : _retained_messages) {
-			if (topic::match(t_ptr->topic_filter(), publish_ptr->topic_name()))
-				t_ptr->publish_retained(ctx, publish_ptr); // topic이 등록된 qos를 가지고 있기 때문에 topic을 통해서 보내야 한다.
+	publish_retained_message(ctx, subscribed_topics, subscribed_wild_topics);
+}
+
+void mqtt_server::handle_unsubscribe(net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_unsubscribe> packet_ptr) {
+	mqtt_client_ptr sender_agent_ptr = std::static_pointer_cast<mqtt_client>(ctx->param());
+	
+	topic_ptr t_ptr;
+	auto& topic_filters = packet_ptr->topic_filters();
+	for (auto topic_filter : topic_filters) {
+		{
+			std::lock_guard<std::mutex> lock(_topic_mutex);
+			try {
+				t_ptr = _topics.at(topic_filter);
+			} catch (const std::exception&) {
+				try {
+					t_ptr = _wild_topics.at(topic_filter);
+				} catch (const std::exception&) {
+					t_ptr = nullptr;
+				}
+			}
 		}
+		
+		if (t_ptr) {
+			t_ptr->unsubscribe(sender_agent_ptr);
+			sender_agent_ptr->get_session_ptr()->delete_subscription(topic_filter);
+		}
+	}
+	
+	ctx->write(std::make_shared<mqtt_unsuback>(packet_ptr->packet_id()));
+}
+
+void mqtt_server::handle_pingreq(net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_pingreq> packet_ptr) {
+	ctx->write(std::make_shared<mqtt_pingresp>());
+}
+
+void mqtt_server::handle_disconnect(net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_disconnect> packet_ptr) {
+	mqtt_client_ptr sender_agent_ptr = std::static_pointer_cast<mqtt_client>(ctx->param());
+
+	sender_agent_ptr->clear_will_message();
+	
+	if (sender_agent_ptr->clean_session()) { // client가 clean session이 설정된 경우 종료 전에 session을 삭제해준다.
+		std::lock_guard<std::mutex> lock(_session_mutex);
+		auto it = _sessions.find(sender_agent_ptr->client_id());
+		_sessions.erase(it);
+		
+		sender_agent_ptr->set_session_ptr(nullptr);
 	}
 }

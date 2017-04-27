@@ -31,6 +31,7 @@ public:
 	void stat(uint8_t s) { _stat = s; }
 
 	bool clean_session() const { return _clean_session; }
+	void clear_will_message();
 
 	void set_session_ptr(session_ptr s_ptr) { _session_ptr = s_ptr; }
 	session_ptr get_session_ptr() { return _session_ptr; }

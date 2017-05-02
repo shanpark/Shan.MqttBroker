@@ -15,6 +15,11 @@ mqtt_disconnect::mqtt_disconnect()
 : fixed_header(DISCONNECT, 0, 0) {
 }
 
-void mqtt_disconnect::serialize(shan::util::streambuf_ptr sb_ptr) {
+void mqtt_disconnect::serialize(shan::util::streambuf_ptr sb_ptr) const {
 	fixed_header::serialize(sb_ptr);
+}
+
+std::ostream& mqtt_disconnect::str(std::ostream& os) const {
+	fixed_header::str(os);
+	return os;
 }

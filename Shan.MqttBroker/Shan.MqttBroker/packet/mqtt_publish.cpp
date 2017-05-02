@@ -16,7 +16,7 @@ mqtt_publish::mqtt_publish(const fixed_header& fh, shan::util::streambuf_ptr sb_
 	_retain = ((_flags & MASK_RETAIN) != 0);
 	if ((_qos == 0) && _dup)
 		throw mqtt_error("malformed packet received. (publish packet with qos = 0 and dup = 1)");
-	if (_qos == 3)
+	if (_qos == QOS_INVALID)
 		throw mqtt_error("malformed packet received. (publish packet with qos = 3)");
 
 	std::size_t variable_header_len = 0;
@@ -33,7 +33,7 @@ mqtt_publish::mqtt_publish(const fixed_header& fh, shan::util::streambuf_ptr sb_
 	variable_header_len += (_topic_name.length() + 2);
 
 	// packet id
-	if ((_qos == 1) || (_qos == 2)) {
+	if ((_qos == QOS_AT_LEAST_ONCE) || (_qos == QOS_EXACTLY_ONCE)) {
 		_packet_id = sb_ptr->read_uint16();
 		variable_header_len += 2;
 	}
@@ -49,11 +49,15 @@ mqtt_publish::mqtt_publish(const fixed_header& fh, shan::util::streambuf_ptr sb_
 mqtt_publish::mqtt_publish(bool dup, uint8_t qos, bool retain, std::string topic_name, uint16_t packet_id, const std::vector<uint8_t>& payload)
 : fixed_header(PUBLISH, 0, 0) {
 	// flags
+	_dup = dup;
+	_qos = qos;
+	_retain = retain;
+
 	uint8_t flags = 0;
 	if (dup)
 		flags = 0x08;
 
-	if (qos == 3)
+	if (qos == QOS_INVALID)
 		throw mqtt_error("try to cretae malformed packet. (PUBLISH QoS is 3)");
 	flags |= (qos << 1);
 
@@ -68,25 +72,41 @@ mqtt_publish::mqtt_publish(bool dup, uint8_t qos, bool retain, std::string topic
 	_topic_name = topic_name;
 	_remaining_length = static_cast<uint32_t>(_topic_name.length()) + 2;
 
-	if ((_qos == 1) || (_qos == 2)) {
+	// packet id
+	if ((_qos == QOS_AT_LEAST_ONCE) || (_qos == QOS_EXACTLY_ONCE)) {
 		_packet_id = packet_id;
 		_remaining_length += 2;
 	}
 
+	// payload
 	if (payload.size() + _remaining_length > 0x0fffffff)
 		throw mqtt_error("try to cretae malformed packet. (PUBLISH payload is too long)");
 	_payload = payload; // copy assignment.
-	_remaining_length += _payload.size();
+	_remaining_length += static_cast<uint32_t>(_payload.size());
 }
 
-void mqtt_publish::serialize(shan::util::streambuf_ptr sb_ptr) {
+void mqtt_publish::serialize(shan::util::streambuf_ptr sb_ptr) const {
 	fixed_header::serialize(sb_ptr);
 
 	encode_string(_topic_name, sb_ptr);
 
-	if ((_qos == 1) || (_qos == 2))
+	if ((_qos == QOS_AT_LEAST_ONCE) || (_qos == QOS_EXACTLY_ONCE))
 		sb_ptr->write_uint16(_packet_id);
 
 
 	sb_ptr->write(&_payload[0], _payload.size());
+}
+
+std::ostream& mqtt_publish::str(std::ostream& os) const {
+	fixed_header::str(os);
+
+	os << ((_dup) ? " D:1" : " D:0")
+	   << " QoS:" << static_cast<int>(_qos)
+	   << ((_retain) ? " R:1" : " R:0")
+	<< " TN:" << _topic_name;
+
+	if (_qos > 0)
+		os << " PID:" << _packet_id;
+
+	return os;
 }

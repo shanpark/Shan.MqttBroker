@@ -16,10 +16,12 @@ public:
 	mqtt_puback(const fixed_header& fh, shan::util::streambuf_ptr sb_ptr);
 	mqtt_puback(uint16_t packet_id);
 
-	virtual void serialize(shan::util::streambuf_ptr sb_ptr) override;
+	virtual void serialize(shan::util::streambuf_ptr sb_ptr) const override;
 
 	uint16_t packet_id() const { return _packet_id; }
-	
+
+	virtual std::ostream& str(std::ostream& os) const override;
+
 private:
 	uint16_t _packet_id;
 };

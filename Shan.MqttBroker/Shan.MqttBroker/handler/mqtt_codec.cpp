@@ -6,6 +6,8 @@
 //  Copyright © 2017 Sung Han Park. All rights reserved.
 //
 
+#include <iostream>
+#include "spdlog/spdlog.h"
 #include "mqtt_codec.h"
 #include "../packet/mqtt_connect.h"
 #include "../packet/mqtt_connack.h"
@@ -85,7 +87,11 @@ void mqtt_codec::channel_read(net::tcp_channel_context_base* ctx, object_ptr& da
 					data = std::static_pointer_cast<object>(std::make_shared<mqtt_disconnect>(fh, sb_ptr));
 					break;
 			}
-		} catch (const util::not_enough_error& e) {
+
+			std::ostringstream os;
+			data->str(os);
+			LOGGER()->trace("<= {}", os.str().c_str());
+		} catch (const util::not_enough_error&) {
 			sb_ptr->reset();
 		}
 	}
@@ -98,6 +104,10 @@ void mqtt_codec::channel_write(net::tcp_channel_context_base* ctx, object_ptr& d
 	std::shared_ptr<fixed_header> packet_ptr = std::dynamic_pointer_cast<fixed_header>(data);
 	if (!packet_ptr)
 		throw std::runtime_error("the parameter of channel_write() is not a mqtt packet object.");
+
+	std::ostringstream os;
+	packet_ptr->str(os);
+	LOGGER()->trace("=> {}", os.str().c_str());
 
 	// serialize packet object
 	util::streambuf_ptr sb_ptr = std::make_shared<util::streambuf>(8 + packet_ptr->remaining_length());

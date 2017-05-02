@@ -9,7 +9,7 @@
 #ifndef packet_handler_h
 #define packet_handler_h
 
-#include "constants.h"
+#include "../constants.h"
 #include "../player/mqtt_server.h"
 
 using namespace shan;

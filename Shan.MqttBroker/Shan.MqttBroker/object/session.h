@@ -16,7 +16,6 @@
 
 using namespace shan;
 
-//... client가 clean_session인 경우 channel_disconnected 핸들러에서도 검사해서 삭제해주어야 한다.
 /**
  session은 관련 client에서만 access되고 client는 handler에서만 access되므로 동기화가 필요하지 않다.
  */
@@ -43,16 +42,20 @@ public:
 	void add_publish_for_rec(std::shared_ptr<mqtt_publish> publish_ptr);
 	void release_publish_for_rec(uint16_t packet_id);
 
+	const std::vector<std::shared_ptr<mqtt_publish>>& unacked_publish_for_ack() const { return _publish_for_ack; }
+	const std::vector<std::shared_ptr<mqtt_publish>>& unacked_publish_for_rec() const { return _publish_for_rec; }
+	const std::vector<uint16_t>& unacked_packet_id_for_pubcomp() const { return _packet_id_for_pubcomp; }
+
 private:
 	uint16_t _next_packet_id;
 	
 	std::set<subscription_ptr, subscription::less> _subscriptions; // <topic_filter, max_qos>
 
-	std::vector<uint16_t> _packet_id_for_pubrel; // when I'm receiver
+	std::vector<uint16_t> _packet_id_for_pubrel; // when server is receiver
 
-	std::vector<std::shared_ptr<mqtt_publish>> _publish_for_ack; // when I'm sender
-	std::vector<std::shared_ptr<mqtt_publish>> _publish_for_rec; // when I'm sender
-	std::vector<uint16_t> _packet_id_for_pubcomp; // when I'm sender
+	std::vector<std::shared_ptr<mqtt_publish>> _publish_for_ack; // when server is sender
+	std::vector<std::shared_ptr<mqtt_publish>> _publish_for_rec; // when server is sender
+	std::vector<uint16_t> _packet_id_for_pubcomp; // when server is sender
 };
 
 using session_ptr = std::shared_ptr<session>;

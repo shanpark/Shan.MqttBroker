@@ -26,7 +26,7 @@ mqtt_suback::mqtt_suback(uint16_t packet_id)
 : fixed_header(SUBACK, 0, 2), _packet_id(packet_id) {
 }
 
-void mqtt_suback::serialize(shan::util::streambuf_ptr sb_ptr) {
+void mqtt_suback::serialize(shan::util::streambuf_ptr sb_ptr) const {
 	fixed_header::serialize(sb_ptr);
 
 	// packet id
@@ -42,4 +42,13 @@ void mqtt_suback::add_return_code(uint8_t return_code) {
 
 	_remaining_length++;
 	_return_codes.push_back(return_code);
+}
+
+std::ostream& mqtt_suback::str(std::ostream& os) const {
+	fixed_header::str(os);
+
+	os << " PID:" << _packet_id
+	   << " R_Num:" << _return_codes.size();
+
+	return os;
 }

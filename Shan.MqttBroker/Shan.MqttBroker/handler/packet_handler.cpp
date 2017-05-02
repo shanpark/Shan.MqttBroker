@@ -3,10 +3,11 @@
 //  Shan.MqttBroker
 //
 //  Created by Sung Han Park on 2017. 4. 22..
-//  Copyright © 2017년 Sung Han Park. All rights reserved.
+//  Copyright © 2017 Sung Han Park. All rights reserved.
 //
 
 #include <iostream>
+#include "spdlog/spdlog.h"
 #include "packet_handler.h"
 #include "../player/mqtt_client.h"
 
@@ -76,30 +77,35 @@ void packet_handler::channel_write(tcp_channel_context_base* ctx, shan::object_p
 }
 
 void packet_handler::channel_written(tcp_channel_context_base* ctx, std::size_t bytes_transferred) {
-	auto client_ptr = static_cast<mqtt_client*>(ctx->param().get());
-	if (client_ptr) {
-		if (client_ptr->stat() == CL_DISCONNECTED)
-			ctx->close();
-	}
+	if (!ctx->param()) // context에 param이 없다는 것은 disconnected 상태라는 뜻이다.
+		ctx->close(); // 그냥 닫으면 된다.
 }
 
 void packet_handler::channel_disconnected(tcp_channel_context_base* ctx) {
+	_server->handle_channel_disconnected(ctx);
 
+	std::ostringstream os;
+	_server->str(os);
+	LOGGER()->trace(os.str().c_str());
 }
 
 void packet_handler::user_event(tcp_channel_context_base* ctx, int64_t id, shan::object_ptr data_ptr) {
 	if (id == ID_NO_CONNECT) {
-		// connect를 안보내고 있다. 끊어버린다.
+		LOGGER()->warn("A client did not send the CONNECT packet within the specified time. Channel closed.");
 		ctx->close();
 	}
 	else if (id == ID_CLIENT_IDLE) {
-		// 패킷 송수신도 없고 ping도 보내지 않고 있다. 끊어 버린다. 지정된 keep alive 시간의 1.5배이다.
+		LOGGER()->warn("A client did not send the PINGREQ packet within the keep-alive time. Channel closed.");
+		ctx->close();
+	}
+	else if (id == ID_CLIENT_DISCONNECTED) {
+		LOGGER()->warn("A client does not disconnect after sending the DISCONNECT packet. Channel closed.");
 		ctx->close();
 	}
 }
 
 void packet_handler::exception_caught(tcp_channel_context_base* ctx, const std::exception& e) {
-	std::cerr << "Error: " << e.what() << std::endl;
+	LOGGER()->error("Error: {}", e.what());
 
 	ctx->close(); // 채널을 닫는다.
 }

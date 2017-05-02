@@ -16,7 +16,9 @@ public:
 	mqtt_connack(const fixed_header& fh, shan::util::streambuf_ptr sb_ptr);
 	mqtt_connack(bool session_present, uint8_t connect_return_code);
 
-	virtual void serialize(shan::util::streambuf_ptr sb_ptr) override;
+	virtual void serialize(shan::util::streambuf_ptr sb_ptr) const override;
+
+	virtual std::ostream& str(std::ostream& os) const override;
 
 private:
 	// variable header only. no payload

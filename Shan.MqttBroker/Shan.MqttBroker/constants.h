@@ -9,9 +9,10 @@
 #ifndef constants_h
 #define constants_h
 
-#include "net/net_ssl.h"
+#include <cstdint>
 #include "exception.h"
-#include "config.h"
+
+#define DEFAULT_CONFIG_FILE	"mqttd.cfg"
 
 enum packet_type : uint8_t {
 	CONNECT     = 1,
@@ -38,19 +39,22 @@ enum flag_mask : uint8_t {
 	MASK_SESSION_PRESENT = 0x01
 };
 
+enum qos : uint8_t {
+	QOS_AT_MOST_ONCE = 0,
+	QOS_AT_LEAST_ONCE = 1,
+	QOS_EXACTLY_ONCE = 2,
+	QOS_INVALID = 3
+};
+
 enum timer_id {
 	ID_NO_CONNECT = 1,
-	ID_CLIENT_IDLE = 2
+	ID_CLIENT_IDLE,
+	ID_CLIENT_DISCONNECTED,
 };
 
-
-enum client_stat : uint8_t {
-	CL_CREATED = 0,
-	CL_CONNECTED,
-	CL_DISCONNECTED
-};
-
+class config;
 extern config g_cfg;
-extern shan::net::tcp_server_base* g_server_p; // singleton of server. life ends with the run().
+
+#define LOGGER()	(spdlog::get("logger"))
 
 #endif /* constants_h */

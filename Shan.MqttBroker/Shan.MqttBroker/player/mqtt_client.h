@@ -26,20 +26,25 @@ public:
 
 	std::size_t channel_id() const { return _channel_id; }
 	std::string client_id() const { return _client_id; }
-	
-	uint8_t stat() const { return _stat; }
-	void stat(uint8_t s) { _stat = s; }
+
+	void admin(bool a) { _admin = a; }
+	bool admin() { return _admin; }
 
 	bool clean_session() const { return _clean_session; }
-	void clear_will_message();
 
 	void set_session_ptr(session_ptr s_ptr) { _session_ptr = s_ptr; }
 	session_ptr get_session_ptr() { return _session_ptr; }
 
-	void publish(uint8_t max_qos, bool retained, std::shared_ptr<mqtt_publish> packet_ptr);
+	bool will_flag() const { return _will_flag; }
+	uint8_t will_qos() const { return _will_qos; }
+	bool will_retain() const { return _will_retain; }
+	const std::string& will_topic() const { return _will_topic; }
+	const std::vector<uint8_t>& will_message() const { return _will_message; }
+
+	void publish(shan::net::tcp_server_base* server_p, uint8_t max_qos, bool retained, std::shared_ptr<mqtt_publish> packet_ptr);
 	void handle_puback(std::shared_ptr<mqtt_puback> packet_ptr);
-	void handle_pubrec(std::shared_ptr<mqtt_pubrec> packet_ptr);
-	void handle_pubrel(std::shared_ptr<mqtt_pubrel> packet_ptr);
+	void handle_pubrec(shan::net::tcp_server_base* server_p, std::shared_ptr<mqtt_pubrec> packet_ptr);
+	void handle_pubrel(shan::net::tcp_server_base* server_p, std::shared_ptr<mqtt_pubrel> packet_ptr);
 	void handle_pubcomp(std::shared_ptr<mqtt_pubcomp> packet_ptr);
 
 	class less {
@@ -53,8 +58,7 @@ private:
 	std::size_t _channel_id;
 	std::string _client_id;
 
-	uint8_t _stat;
-
+	bool _admin;
 	bool _clean_session;
 
 	bool _will_flag;

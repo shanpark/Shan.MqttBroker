@@ -35,7 +35,7 @@ mqtt_connect::mqtt_connect(const fixed_header& fh, shan::util::streambuf_ptr sb_
 		if ((_will_qos != 0) || (_will_retain))
 			throw mqtt_error("malformed packet received. (CONNECT - connect flags - will flag, will qos, will_retain)");
 	}
-	if (_will_qos >= 3)
+	if (_will_qos >= QOS_INVALID)
 		throw mqtt_error("malformed packet received. (CONNECT - connect flags - will QoS)");
 
 	// keep alive (A Keep Alive value of zero(0) has the effect of turning off the keep alive mechanism)
@@ -62,14 +62,14 @@ mqtt_connect::mqtt_connect(std::string protocol_name, uint8_t protocol_level, bo
 						   uint16_t keep_alive, std::string client_id, std::string will_topic, std::vector<uint8_t> will_message, std::string username, std::vector<uint8_t> password)
 : fixed_header(CONNECT, 0, 0), _protocol_name(protocol_name), _protocol_level(protocol_level), _username_flag(username_flag), _password_flag(password_flag), _will_retain(will_retain), _will_qos(will_qos), _will_flag(will_flag)
 , _clean_session(clean_session), _keep_alive(keep_alive), _client_id(client_id), _will_topic(will_topic), _will_message(will_message), _username(username), _password(password) {
-	_remaining_length += (_protocol_name.length() + 2); // protocol name
+	_remaining_length += static_cast<uint32_t>(_protocol_name.length() + 2); // protocol name
 	_remaining_length += 1; // protocol level
 
 	if (!_will_flag) {
 		if ((_will_qos != 0) || (_will_retain))
 			throw mqtt_error("malformed packet. (CONNECT - connect flags - will flag, will qos, will_retain)");
 	}
-	if (_will_qos >= 3)
+	if (_will_qos >= QOS_INVALID)
 		throw mqtt_error("malformed packet. (CONNECT - connect flags - will QoS)");
 
 	_connect_flags = 0;
@@ -86,20 +86,20 @@ mqtt_connect::mqtt_connect(std::string protocol_name, uint8_t protocol_level, bo
 	_remaining_length += 1; // connect flag
 	_remaining_length += 2; // keep_alive
 
-	_remaining_length += (2 + _client_id.length());
+	_remaining_length += static_cast<uint32_t>(2 + _client_id.length());
 
 	if (_will_flag) {
-		_remaining_length += (2 + will_topic.length());
-		_remaining_length += (2 + will_message.size());
+		_remaining_length += static_cast<uint32_t>(2 + will_topic.length());
+		_remaining_length += static_cast<uint32_t>(2 + will_message.size());
 	}
 
 	if (_username_flag)
-		_remaining_length += (2 + _username.length());
+		_remaining_length += static_cast<uint32_t>(2 + _username.length());
 	if (_password_flag)
-		_remaining_length += (2 + _password.size());
+		_remaining_length += static_cast<uint32_t>(2 + _password.size());
 }
 
-void mqtt_connect::serialize(shan::util::streambuf_ptr sb_ptr) {
+void mqtt_connect::serialize(shan::util::streambuf_ptr sb_ptr) const {
 	fixed_header::serialize(sb_ptr);
 
 	encode_string(_protocol_name, sb_ptr);
@@ -147,4 +147,20 @@ uint8_t mqtt_connect::check_integrity(client_id_generator_if* generator) {
 	// 오래 걸리는 작업일 수도 있으므로 여기서는 integrity만 검사한다.
 
 	return 0x00; // integrity OK.
+}
+
+std::ostream& mqtt_connect::str(std::ostream& os) const {
+	fixed_header::str(os);
+
+	os << " " << _protocol_name << " " << static_cast<int>(_protocol_level);
+	os << ((_username_flag) ? " UN:1" : " UN:0")
+	   << ((_password_flag) ? " PW:1" : " PW:0")
+	   << ((_will_retain) ? " WR:1" : " WR:0")
+	   << " WQoS:" << static_cast<int>(_will_qos)
+	   << ((_will_flag) ? " WF:1" : " WF:0")
+	   << ((_clean_session) ? " CS:1" : " CS:0")
+	   << " KA:" << _keep_alive
+	   << " CID:" <<  _client_id;
+
+	return os;
 }

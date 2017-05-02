@@ -17,8 +17,16 @@ mqtt_pubrec::mqtt_pubrec(uint16_t packet_id)
 : fixed_header(PUBREC, 0, 2), _packet_id(packet_id) {
 }
 
-void mqtt_pubrec::serialize(shan::util::streambuf_ptr sb_ptr) {
+void mqtt_pubrec::serialize(shan::util::streambuf_ptr sb_ptr) const {
 	fixed_header::serialize(sb_ptr);
 
 	sb_ptr->write_uint16(_packet_id);
+}
+
+std::ostream& mqtt_pubrec::str(std::ostream& os) const {
+	fixed_header::str(os);
+
+	os << " PID:" << _packet_id;
+
+	return os;
 }

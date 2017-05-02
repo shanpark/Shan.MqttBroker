@@ -16,7 +16,9 @@ public:
 	mqtt_pingreq(const fixed_header& fh, shan::util::streambuf_ptr sb_ptr);
 	mqtt_pingreq();
 
-	virtual void serialize(shan::util::streambuf_ptr sb_ptr) override;
+	virtual void serialize(shan::util::streambuf_ptr sb_ptr) const override;
+
+	virtual std::ostream& str(std::ostream& os) const override;
 };
 
 #endif /* mqtt_pingreq_h */

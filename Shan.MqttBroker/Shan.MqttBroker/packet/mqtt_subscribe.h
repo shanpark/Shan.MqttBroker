@@ -17,17 +17,19 @@ public:
 	mqtt_subscribe(const fixed_header& fh, shan::util::streambuf_ptr sb_ptr);
 	mqtt_subscribe(uint16_t packet_id);
 
-	virtual void serialize(shan::util::streambuf_ptr sb_ptr) override;
+	virtual void serialize(shan::util::streambuf_ptr sb_ptr) const override;
 
 	void add_topic_filter(std::string topic_filter, uint8_t max_qos);
-	bool is_topic_filter_valid(std::string topic_filter, bool& is_wild);
+	static bool is_topic_filter_valid(std::string topic_filter, bool& is_wild);
 
 	uint16_t packet_id() const { return _packet_id; }
 	const std::vector<std::string>& topic_filters() const { return _topic_filters; }
 	const std::vector<uint8_t>& max_qoses() const { return _max_qoses; }
 
 	const std::vector<bool>& is_wild() const { return _is_wild; }
-	
+
+	virtual std::ostream& str(std::ostream& os) const override;
+
 private:
 	uint16_t _packet_id;
 	std::vector<std::string> _topic_filters;

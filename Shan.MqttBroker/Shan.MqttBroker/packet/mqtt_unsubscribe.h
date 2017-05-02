@@ -16,16 +16,21 @@ public:
 	mqtt_unsubscribe(const fixed_header& fh, shan::util::streambuf_ptr sb_ptr);
 	mqtt_unsubscribe(uint16_t packet_id);
 
-	virtual void serialize(shan::util::streambuf_ptr sb_ptr) override;
+	virtual void serialize(shan::util::streambuf_ptr sb_ptr) const override;
 
 	void add_topic_filter(std::string topic_filter);
 	
 	uint16_t packet_id() const { return _packet_id; }
 	const std::vector<std::string>& topic_filters() const { return _topic_filters; }
-	
+	const std::vector<bool>& is_wild() const { return _is_wild; }
+
+	virtual std::ostream& str(std::ostream& os) const override;
+
 private:
 	uint16_t _packet_id;
 	std::vector<std::string> _topic_filters;
+
+	std::vector<bool> _is_wild;
 };
 
 #endif /* mqtt_unsubscribe_h */

@@ -10,9 +10,10 @@
 #define topic_h
 
 #include <map>
+#include <memory>
 #include "../constants.h"
 #include "../packet/mqtt_publish.h"
-#include "mqtt_client.h"
+#include "../player/mqtt_client.h"
 
 using namespace shan;
 
@@ -23,13 +24,15 @@ class topic : public object {
 public:
 	topic(std::string topic_filter);
 
+	bool empty();
+
 	const std::string& topic_filter() const { return _topic_filter; }
 
-	std::shared_ptr<mqtt_publish> retained_message() { return std::atomic_load(&_retained_message); }
-	void retained_message(std::shared_ptr<mqtt_publish> retain_message) { std::atomic_store(&_retained_message, retain_message); }
+	std::shared_ptr<mqtt_publish> retained_message();
+	void retained_message(std::shared_ptr<mqtt_publish> retain_message);
 
-	bool publish(std::shared_ptr<mqtt_publish> packet_ptr);
-	void publish_retained(net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_publish> packet_ptr);
+	bool publish(net::tcp_server_base* server_p, std::shared_ptr<mqtt_publish> packet_ptr);
+	void publish_retained(net::tcp_server_base* server_p, net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_publish> packet_ptr);
 
 	void subscribe(mqtt_client_ptr client_ptr, uint8_t max_qos);
 	void unsubscribe(mqtt_client_ptr client_ptr);

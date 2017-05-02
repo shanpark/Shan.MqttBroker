@@ -16,9 +16,11 @@ public:
 	mqtt_suback(const fixed_header& fh, shan::util::streambuf_ptr sb_ptr);
 	mqtt_suback(uint16_t packet_id);
 
-	virtual void serialize(shan::util::streambuf_ptr sb_ptr) override;
+	virtual void serialize(shan::util::streambuf_ptr sb_ptr) const override;
 
 	void add_return_code(uint8_t return_code);
+
+	virtual std::ostream& str(std::ostream& os) const override;
 
 private:
 	uint16_t _packet_id;

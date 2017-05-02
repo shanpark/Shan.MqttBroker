@@ -9,26 +9,29 @@
 #ifndef fixed_header_h
 #define fixed_header_h
 
-#include "constants.h"
+#include "../constants.h"
+#include "util/streambuf.h"
 
 class fixed_header : public shan::object {
 public:
 	fixed_header(shan::util::streambuf_ptr sb_ptr);
 	fixed_header(packet_type type, uint8_t flags, uint32_t remaining_length);
 
-	virtual void serialize(shan::util::streambuf_ptr sb_ptr);
+	virtual void serialize(shan::util::streambuf_ptr sb_ptr) const;
 
-	packet_type type() { return _type; }
-	uint32_t remaining_length() { return _remaining_length; }
+	packet_type type() const { return _type; }
+	uint32_t remaining_length() const { return _remaining_length; }
 
 	static std::string decode_string(shan::util::streambuf_ptr sb_ptr);
 	static void encode_string(const std::string& str, shan::util::streambuf_ptr sb_ptr);
 	static std::vector<uint8_t> decode_binary(shan::util::streambuf_ptr sb_ptr);
 	static void encode_binary(const std::vector<uint8_t>& bin, shan::util::streambuf_ptr sb_ptr);
 
+	virtual std::ostream& str(std::ostream& os) const override;
+
 protected:
 	void decode_remaining_length(shan::util::streambuf_ptr sb_ptr);
-	void encode_remaining_length(shan::util::streambuf_ptr sb_ptr);
+	void encode_remaining_length(shan::util::streambuf_ptr sb_ptr) const;
 
 protected:
 	packet_type _type;

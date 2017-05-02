@@ -15,6 +15,11 @@ mqtt_pingresp::mqtt_pingresp()
 : fixed_header(PINGRESP, 0, 0) {
 }
 
-void mqtt_pingresp::serialize(shan::util::streambuf_ptr sb_ptr) {
+void mqtt_pingresp::serialize(shan::util::streambuf_ptr sb_ptr) const {
 	fixed_header::serialize(sb_ptr);
+}
+
+std::ostream& mqtt_pingresp::str(std::ostream& os) const {
+	fixed_header::str(os);
+	return os;
 }

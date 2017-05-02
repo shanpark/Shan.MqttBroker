@@ -94,6 +94,7 @@
 		907FEA071EADD47500D2B4D6 /* mqtt_disconnect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_disconnect.cpp; path = packet/mqtt_disconnect.cpp; sourceTree = "<group>"; };
 		909D429E1EB03B58005AAE5C /* topic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = topic.cpp; path = object/topic.cpp; sourceTree = "<group>"; };
 		909D429F1EB03B58005AAE5C /* topic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = topic.h; path = object/topic.h; sourceTree = "<group>"; };
+		909D42BF1EB6D0CA005AAE5C /* mqttd.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mqttd.cfg; sourceTree = "<group>"; };
 		90AA6AE91EACADD8002ABCE1 /* mqtt_publish.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_publish.h; path = packet/mqtt_publish.h; sourceTree = "<group>"; };
 		90AA6AEA1EACADF5002ABCE1 /* mqtt_publish.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mqtt_publish.cpp; path = packet/mqtt_publish.cpp; sourceTree = "<group>"; };
 		90AA6AEC1EACE565002ABCE1 /* mqtt_puback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mqtt_puback.h; path = packet/mqtt_puback.h; sourceTree = "<group>"; };
@@ -120,6 +121,7 @@
 		9004F3471EAB276E00547615 = {
 			isa = PBXGroup;
 			children = (
+				909D42BF1EB6D0CA005AAE5C /* mqttd.cfg */,
 				9004F3521EAB276E00547615 /* Shan.MqttBroker */,
 				9004F3511EAB276E00547615 /* Products */,
 				9004F35A1EAB283800547615 /* Frameworks */,
@@ -361,9 +363,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					../Shan.Lib,
+					../Shan.Lib/include,
 					"../asio-1.10.8/include",
 					/usr/local/include,
+					../spdlog/include,
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
@@ -408,9 +411,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					../Shan.Lib,
+					../Shan.Lib/include,
 					"../asio-1.10.8/include",
 					/usr/local/include,
+					../spdlog/include,
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;

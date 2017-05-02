@@ -24,16 +24,21 @@ mqtt_subscribe::mqtt_subscribe(const fixed_header& fh, shan::util::streambuf_ptr
 
 	while (remain > 0) {
 		std::string topic = decode_string(sb_ptr);
-		remain -= (topic.length() + 2);
+		uint8_t max_qos;
+		remain -= static_cast<int32_t>(topic.length() + 2);
 
 		bool is_wild_topic = false;
-		if (!is_topic_filter_valid(topic, is_wild_topic))
-			throw mqtt_error("A SUBSCRIBE with invalid topic filter.");
-
-		uint8_t max_qos = sb_ptr->read_uint8();
-		if (max_qos >= 3)
-			throw mqtt_error("malformed packet. (SUBSCRIBE topic filter QoS)");
-		remain--;
+		if (is_topic_filter_valid(topic, is_wild_topic)) {
+			max_qos = sb_ptr->read_uint8();
+			if (max_qos >= QOS_INVALID)
+				throw mqtt_error("malformed packet. (SUBSCRIBE topic filter QoS)");
+			remain--;
+		}
+		else {
+			max_qos = 0x80; // invalid topic_filter. failure.
+			is_wild_topic = false;
+			// throw mqtt_error("A SUBSCRIBE with invalid topic filter.");
+		}
 
 		_topic_filters.emplace_back(topic);
 		_max_qoses.push_back(max_qos);
@@ -48,7 +53,7 @@ mqtt_subscribe::mqtt_subscribe(uint16_t packet_id)
 : fixed_header(SUBSCRIBE, 2, 2), _packet_id(packet_id) {
 }
 
-void mqtt_subscribe::serialize(shan::util::streambuf_ptr sb_ptr) {
+void mqtt_subscribe::serialize(shan::util::streambuf_ptr sb_ptr) const {
 	fixed_header::serialize(sb_ptr);
 
 	// packet id (variable header)
@@ -56,17 +61,17 @@ void mqtt_subscribe::serialize(shan::util::streambuf_ptr sb_ptr) {
 
 	// topic filter (payload)
 	auto len = _topic_filters.size();
-	for (int inx = 0 ; inx < len ; inx++) {
+	for (decltype(len) inx = 0 ; inx < len ; inx++) {
 		encode_string(_topic_filters[inx], sb_ptr);
 		sb_ptr->write_uint8(_max_qoses[inx]);
 	}
 }
 
 void mqtt_subscribe::add_topic_filter(std::string topic_filter, uint8_t max_qos) {
-	if (max_qos >= 3)
+	if (max_qos >= QOS_INVALID)
 		throw mqtt_error("malformed packet. (SUBSCRIBE topic filter QoS)");
 
-	_remaining_length += (2 + topic_filter.length());
+	_remaining_length += static_cast<uint32_t>(2 + topic_filter.length());
 	_topic_filters.push_back(topic_filter);
 
 	_remaining_length ++;
@@ -78,7 +83,7 @@ bool mqtt_subscribe::is_topic_filter_valid(std::string topic_filter, bool& is_wi
 
 	char ch, prev_ch = '\0';
 	auto len = topic_filter.length();
-	for (int inx = 0 ; inx < len ; inx++) {
+	for (decltype(len) inx = 0 ; inx < len ; inx++) {
 		ch = topic_filter[inx];
 		if (ch == '#') {
 			is_wild = true;
@@ -94,4 +99,13 @@ bool mqtt_subscribe::is_topic_filter_valid(std::string topic_filter, bool& is_wi
 	}
 
 	return true;
+}
+
+std::ostream& mqtt_subscribe::str(std::ostream& os) const {
+	fixed_header::str(os);
+
+	os << " PID:" << _packet_id
+	   << " T_Num:" << _topic_filters.size();
+
+	return os;
 }

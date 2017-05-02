@@ -17,9 +17,17 @@ mqtt_unsuback::mqtt_unsuback(uint16_t packet_id)
 : fixed_header(UNSUBACK, 0, 2), _packet_id(packet_id) {
 }
 
-void mqtt_unsuback::serialize(shan::util::streambuf_ptr sb_ptr) {
+void mqtt_unsuback::serialize(shan::util::streambuf_ptr sb_ptr) const {
 	fixed_header::serialize(sb_ptr);
 
 	// packet id
 	sb_ptr->write_uint16(_packet_id);
+}
+
+std::ostream& mqtt_unsuback::str(std::ostream& os) const {
+	fixed_header::str(os);
+
+	os << " PID:" << _packet_id;
+
+	return os;
 }

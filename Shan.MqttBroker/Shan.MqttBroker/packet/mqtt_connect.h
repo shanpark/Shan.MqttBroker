@@ -31,7 +31,7 @@ public:
 	mqtt_connect(const fixed_header& fh, shan::util::streambuf_ptr sb_ptr);
 	mqtt_connect(std::string protocol_name, uint8_t protocol_level, bool username_flag, bool password_flag, bool will_retain, uint8_t will_qos, bool will_flag, bool clean_session, uint16_t keep_alive, std::string client_id, std::string will_topic, std::vector<uint8_t> will_message, std::string username, std::vector<uint8_t> password);
 
-	virtual void serialize(shan::util::streambuf_ptr sb_ptr) override;
+	virtual void serialize(shan::util::streambuf_ptr sb_ptr) const override;
 
 	uint8_t check_integrity(client_id_generator_if* generator);
 
@@ -49,6 +49,8 @@ public:
 	std::vector<uint8_t> will_message() const { return _will_message; }
 	std::string username() const { return _username; }
 	std::vector<uint8_t> password() const { return _password; }
+
+	virtual std::ostream& str(std::ostream& os) const override;
 
 private:
 	// variable header

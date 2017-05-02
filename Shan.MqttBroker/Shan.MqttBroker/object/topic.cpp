@@ -9,32 +9,58 @@
 #include "topic.h"
 #include "../packet/mqtt_puback.h"
 
+using namespace shan;
+
 topic::topic(std::string topic_filter)
 : _topic_filter(topic_filter) {
 }
 
-bool topic::publish(std::shared_ptr<mqtt_publish> packet_ptr) {
-	bool sent = false;
+bool topic::empty() {
 	std::lock_guard<std::mutex> lock(_client_mutex);
-
-	// publish message to clients
-	for (auto pair : _clients) {
-		pair.first->publish(pair.second, false, packet_ptr);
-		sent = true;
-	}
+	if (!_retained_message && _clients.empty())
+		return true;
 	
 	return false;
 }
 
-void topic::publish_retained(net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_publish> packet_ptr) {
+std::shared_ptr<mqtt_publish> topic::retained_message() {
+	return std::atomic_load(&_retained_message); //... gcc 4.9에서 shared_ptr에 대한 automic_xxx()를 지원하지 않는다. 그래서 어쩔 수 없이 mutex로 교체함. 나중에 다시 복구할 것임.
+}
+
+void topic::retained_message(std::shared_ptr<mqtt_publish> retain_message) {
+	if (retain_message->payload().size() == 0)
+		std::atomic_store(&_retained_message, std::shared_ptr<mqtt_publish>(nullptr)); // payload가 0이면 저장하지 않고 기존 메시지를 삭제한다.
+	else
+		std::atomic_store(&_retained_message, retain_message); // 새로운 메시지로 교체한다.
+}
+
+bool topic::publish(net::tcp_server_base* server_p, std::shared_ptr<mqtt_publish> packet_ptr) {
+	if (packet_ptr->retain())
+		retained_message(packet_ptr); // retain message 저장. 길이가 0이면 삭제될 것이다.
+
+	bool sent = false;
+	{
+		std::lock_guard<std::mutex> lock(_client_mutex);
+
+		// publish message to clients
+		for (auto pair : _clients) {
+			pair.first->publish(server_p, pair.second, false, packet_ptr);
+			sent = true;
+		}
+	}
+
+	return sent;
+}
+
+void topic::publish_retained(net::tcp_server_base* server_p, net::tcp_channel_context_base* ctx, std::shared_ptr<mqtt_publish> packet_ptr) {
 	mqtt_client_ptr client_ptr = std::static_pointer_cast<mqtt_client>(ctx->param());
 
 	try {
 		std::lock_guard<std::mutex> lock(_client_mutex);
 		uint8_t max_qos = _clients.at(client_ptr);
-		client_ptr->publish(max_qos, true, packet_ptr);
-	} catch (const std::exception& e) {
-		throw mqtt_error("try to publish retained message to a client not to subscribe.");
+		client_ptr->publish(server_p, max_qos, true, packet_ptr);
+	} catch (const std::exception&) {
+		throw mqtt_error("attempt to publish retained message to a client that is not subscribing.");
 	}
 }
 

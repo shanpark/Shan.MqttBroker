@@ -10,8 +10,8 @@
 #define config_h
 
 #include "spdlog/spdlog.h"
+#include <shan/util/properties.h>
 #include "constants.h"
-#include "util/properties.h"
 
 using namespace shan;
 

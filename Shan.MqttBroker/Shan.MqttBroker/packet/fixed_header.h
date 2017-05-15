@@ -10,7 +10,7 @@
 #define fixed_header_h
 
 #include "../constants.h"
-#include "util/streambuf.h"
+#include <shan/util/streambuf.h>
 
 class fixed_header : public shan::object {
 public:

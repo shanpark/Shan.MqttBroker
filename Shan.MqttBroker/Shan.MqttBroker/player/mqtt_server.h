@@ -10,8 +10,9 @@
 #define mqtt_server_h
 
 #include <unordered_map>
-#include "net/net.h"
+#include <shan/net.h>
 #include "../packet/client_id_generator_if.h"
+#include "../packet/client_checker_if.h"
 #include "../packet/mqtt_connect.h"
 #include "../packet/mqtt_connack.h"
 #include "../packet/mqtt_publish.h"
@@ -32,7 +33,7 @@
 
 using namespace shan;
 
-class mqtt_server : public object, public client_id_generator_if {
+class mqtt_server : public object, public client_id_generator_if, public client_checker_if {
 public:
 	mqtt_server(net::tcp_server_base* service_p);
 
@@ -48,7 +49,7 @@ public:
 	void delete_session_ptr(std::string client_id);
 
 	bool is_admin(const std::string& username, const std::vector<uint8_t>& password);
-	bool authenticate(const std::string& username, const std::vector<uint8_t>& password);
+	bool authenticate(const std::string& username, const std::vector<uint8_t>& password) override;
 	void reset_idle_timer(net::tcp_channel_context_base* ctx, uint32_t timer_id, uint64_t timeout);
 	topic_ptr get_topic_ptr_to_subscribe(std::string topic_filter, bool is_wild);
 	void publish_retained_message(net::tcp_channel_context_base* ctx, const std::vector<topic_ptr>& subscribed_topics, const std::vector<topic_ptr>& subscribed_wild_topics);

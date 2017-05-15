@@ -9,7 +9,7 @@
 #ifndef mqtt_client_h
 #define mqtt_client_h
 
-#include "net/net.h"
+#include <shan/net.h>
 #include "../packet/mqtt_connect.h"
 #include "../packet/mqtt_publish.h"
 #include "../packet/mqtt_puback.h"

@@ -25,6 +25,10 @@ mqtt_unsubscribe::mqtt_unsubscribe(const fixed_header& fh, shan::util::streambuf
 
 	while (remain > 0) {
 		std::string topic = decode_string(sb_ptr);
+
+		if (topic.empty())
+			throw mqtt_error("malformed packet received. (empty topic filter)");
+
 		remain -= static_cast<int32_t>(topic.length() + 2);
 
 		bool is_wild_topic = false;

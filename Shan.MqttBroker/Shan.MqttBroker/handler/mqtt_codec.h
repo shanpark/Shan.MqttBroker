@@ -9,7 +9,7 @@
 #ifndef mqtt_codec_h
 #define mqtt_codec_h
 
-#include "net/net.h"
+#include <shan/net.h>
 #include "../constants.h"
 
 using namespace shan;

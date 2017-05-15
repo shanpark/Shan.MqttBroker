@@ -23,6 +23,9 @@ mqtt_publish::mqtt_publish(const fixed_header& fh, shan::util::streambuf_ptr sb_
 
 	// topic name
 	_topic_name = decode_string(sb_ptr);
+	if (_topic_name.empty())
+		throw mqtt_error("malformed packet received. (empty topic name)");
+
 	if (_topic_name[0] == '$')
 		throw mqtt_error("malformed packet received. (clients can not publish to topics starting with $)");
 

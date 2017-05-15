@@ -11,7 +11,7 @@
 
 class client_checker_if {
 public:
-	virtual bool authorized(std::string username, std::vector<uint8_t> password) = 0;
+	virtual bool authenticate(const std::string& username, const std::vector<uint8_t>& password) = 0;
 };
 
 #endif /* client_checker_if_h */

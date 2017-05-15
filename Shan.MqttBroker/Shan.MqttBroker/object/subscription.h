@@ -9,7 +9,7 @@
 #ifndef subscription_h
 #define subscription_h
 
-#include "object.h"
+#include <shan/object.h>
 
 using namespace shan;
 

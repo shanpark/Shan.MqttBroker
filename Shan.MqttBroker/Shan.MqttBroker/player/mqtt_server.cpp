@@ -142,18 +142,20 @@ void mqtt_server::publish_retained_message(net::tcp_channel_context_base* ctx, c
 void mqtt_server::publish_will_message(mqtt_client_ptr client_ptr) {
 	if (client_ptr->will_flag()) {
 		try {
-			topic_ptr t_ptr;
-			{
-				std::lock_guard<std::mutex> lock(_topic_mutex);
-				t_ptr = _topics.at(client_ptr->will_topic());
-			}
-
 			auto& topic_name = client_ptr->will_topic();
 			auto qos = client_ptr->will_qos();
 			auto retain = client_ptr->will_retain();
 
-			auto publish_ptr = std::make_shared<mqtt_publish>(false, qos, retain, topic_name, client_ptr->get_session_ptr()->new_packet_id(), client_ptr->will_message());
-			t_ptr->publish(_tcp_server_ptr.get(), publish_ptr);
+			topic_ptr t_ptr;
+			{
+				std::lock_guard<std::mutex> lock(_topic_mutex);
+				t_ptr = _topics.at(topic_name);
+			}
+
+			if (t_ptr) {
+				auto publish_ptr = std::make_shared<mqtt_publish>(false, qos, retain, topic_name, client_ptr->get_session_ptr()->new_packet_id(), client_ptr->will_message());
+				t_ptr->publish(_tcp_server_ptr.get(), publish_ptr);
+			}
 		} catch (const std::exception&) {
 			// no such topic exists.
 		}
